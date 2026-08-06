@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Equikinetik Timer</title>
+
+  <!-- PWA Meta Tags für iPhone -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="EQ Timer" />
+  <meta name="theme-color" content="#0f1117" />
+  <link rel="apple-touch-icon" href="https://em-content.zobj.net/source/apple/354/horse_1f40e.png" />
+  <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Equikinetik%20Timer%22%2C%22short_name%22%3A%22EQ%20Timer%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f1117%22%2C%22theme_color%22%3A%22%230f1117%22%7D" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0f1117;
+      --surface:  #1a1d27;
+      --card:     #21263a;
+      --border:   #2e3450;
+      --accent:   #c8a96e;   /* warm gold – Pferd, Stroh, Leder */
+      --accent2:  #4e9e8c;   /* sagegreen – Weide */
+      --danger:   #e07070;
+      --pause:    #6e9ec8;
+      --text:     #e8e4dc;
+      --muted:    #7a8099;
+      --radius:   14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── HEADER ─────────────────────────────────── */
+    header {
+      width: 100%;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+    header span.sub {
+      font-size: .75rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── TABS ───────────────────────────────────── */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 16px 16px 0;
+      width: 100%;
+      max-width: 520px;
+    }
+    .tab-btn {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 10px 10px 0 0;
+      padding: 10px 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .tab-btn.active {
+      background: var(--card);
+      color: var(--accent);
+      border-bottom-color: var(--card);
+    }
+
+    /* ── MAIN PANEL ─────────────────────────────── */
+    .panel {
+      display: none;
+      width: 100%;
+      max-width: 520px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 20px 16px 24px;
+    }
+    .panel.active { display: block; }
+
+    /* ── PROGRAM LIST ───────────────────────────── */
+    .prog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .prog-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color .2s;
+    }
+    .prog-card:hover { border-color: var(--accent); }
+    .prog-card.selected { border-color: var(--accent); background: #2a2540; }
+    .prog-card .prog-name { font-weight: 600; font-size: .95rem; }
+    .prog-card .prog-meta { font-size: .78rem; color: var(--muted); margin-top: 3px; }
+    .prog-card .prog-actions { display: flex; gap: 8px; }
+    .prog-card .prog-actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 2px 4px;
+      color: var(--muted);
+      transition: color .2s;
+    }
+    .prog-card .prog-actions button:hover { color: var(--danger); }
+
+    /* ── FORM ───────────────────────────────────── */
+    .form-section { margin-top: 16px; }
+    .form-section h3 {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .form-row.full { grid-template-columns: 1fr; }
+    label { font-size: .8rem; color: var(--muted); display: block; margin-bottom: 4px; }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    input:focus { border-color: var(--accent); }
+
+    /* ── BUTTONS ────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary {
+      background: var(--accent);
+      color: #0f1117;
+      padding: 11px 20px;
+      font-size: .9rem;
+    }
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 18px;
+      font-size: .85rem;
+    }
+    .btn-ghost {
+      background: none;
+      color: var(--muted);
+      padding: 8px 14px;
+      font-size: .85rem;
+    }
+    .btn:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* ── TIMER DISPLAY ──────────────────────────── */
+    .timer-wrap {
+      text-align: center;
+      padding: 10px 0 16px;
+    }
+    .phase-label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      min-height: 18px;
+      transition: color .3s;
+    }
+    .phase-label.work  { color: var(--accent); }
+    .phase-label.pause { color: var(--pause); }
+    .phase-label.done  { color: var(--accent2); }
+
+    .clock {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 22vw, 7rem);
+      line-height: 1;
+      letter-spacing: 4px;
+      color: var(--text);
+      transition: color .3s;
+    }
+    .clock.work  { color: var(--accent); }
+    .clock.pause { color: var(--pause); }
+
+    .round-info {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    .prog-title-display {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    /* progress bar */
+    .progress-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 99px;
+      margin: 14px 0 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--accent);
+      transition: width .5s linear, background .3s;
+      width: 0%;
+    }
+    .progress-bar-fill.pause { background: var(--pause); }
+
+    /* controls */
+    .controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .ctrl-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color .2s, background .2s;
+    }
+    .ctrl-btn.play {
+      width: 72px;
+      height: 72px;
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0f1117;
+      font-size: 1.8rem;
+    }
+    .ctrl-btn:hover { border-color: var(--accent); }
+    .ctrl-btn.play:hover { opacity: .9; }
+
+    /* ── DIVIDER ────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 18px 0;
+    }
+
+    /* ── TOAST ──────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 99px;
+      font-size: .85rem;
+      transition: transform .3s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── PWA INSTALL BANNER ─────────────────── */
+    #installBanner {
+      display: none;
+      width: 100%;
+      max-width: 520px;
+      background: linear-gradient(135deg, #2a2540, #1a1d27);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 12px 0 0;
+      gap: 12px;
+      align-items: center;
+    }
+    #installBanner.visible { display: flex; }
+    #installBanner .install-text { flex: 1; font-size: .82rem; color: var(--text); line-height: 1.4; }
+    #installBanner .install-text strong { color: var(--accent); display: block; margin-bottom: 2px; }
+    #installBanner .btn-install {
+      background: var(--accent);
+      color: #0f1117;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: .82rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    #installBanner .btn-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0 4px;
+    }
+
+    /* ── WAKE LOCK INDICATOR ────────────────── */
+    #wakeLockIndicator {
+      font-size: .7rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 6px 0 0;
+      min-height: 20px;
+    }
+    #wakeLockIndicator.active { color: var(--accent2); }
+
+    /* ── WELCOME MODAL ──────────────────────── */
+    #welcomeOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.8);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #welcomeOverlay.hidden { display: none; }
+    #welcomeModal {
+      background: var(--card);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 28px 22px 22px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+    }
+    #welcomeModal .horse-icon { font-size: 2.6rem; margin-bottom: 10px; }
+    #welcomeModal h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    #welcomeModal .hint-box {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin: 0 0 18px;
+      font-size: .87rem;
+      color: var(--text);
+      line-height: 1.7;
+      text-align: left;
+    }
+    #welcomeModal .hint-box span { display: block; }
+
+    @media (max-width: 380px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- WELCOME MODAL -->
+<div id="welcomeOverlay">
+  <div id="welcomeModal">
+    <div class="horse-icon">🐴</div>
+    <h2>Bereit fürs Training?</h2>
+    <div class="hint-box">
+      <span>🔆 <strong>Bildschirm bleibt automatisch an</strong> – damit du alle Töne hörst.</span>
+      <span style="margin-top:8px;">🚫 Bitte den Bildschirm <strong>nicht manuell sperren</strong> – sonst sind die Töne weg.</span>
+      <span style="margin-top:8px;">📱 Leg dein Handy auf die <strong>Bande</strong>, konzentrier dich und <strong>zähl die Runden</strong> – die App sagt dir nach jedem Pfiff welche Runde das ist!</span>
+    </div>
+    <button class="btn btn-primary" id="btnWelcomeOk" style="width:100%;padding:14px;">Los geht's! 🎯</button>
+  </div>
+</div>
+
+<header>
+  <div>
+    <h1>🐴 Equikinetik Timer</h1>
+    <span class="sub">Intervall-Training mit Pferden</span>
+  </div>
+</header>
+
+<div class="tabs" id="tabs">
+  <button class="tab-btn active" data-tab="timer">▶ Timer</button>
+  <button class="tab-btn" data-tab="programs">📋 Programme</button>
+  <button class="tab-btn" data-tab="new">＋ Neu</button>
+</div>
+
+<!-- ═══════════ TAB: TIMER ═══════════ -->
+<div class="panel active" id="tab-timer">
+
+  <div class="timer-wrap">
+    <div class="prog-title-display" id="timerProgName">Kein Programm gewählt</div>
+    <div class="phase-label" id="phaseLabel">–</div>
+    <div class="clock" id="clock">00:00</div>
+    <div class="round-info" id="roundInfo"></div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" id="btnReset" title="Zurücksetzen">↺</button>
+    <button class="ctrl-btn play" id="btnPlay" title="Start / Pause">▶</button>
+    <button class="ctrl-btn" id="btnSkip" title="Phase überspringen">⏭</button>
+  </div>
+
+  <hr class="divider" />
+
+  <div id="wakeLockIndicator"></div>
+
+  <p style="font-size:.8rem;color:var(--muted);text-align:center;">
+    Wähle unter <strong style="color:var(--text)">Programme</strong> ein Training aus,<br>dann hier starten.
+  </p>
+</div>
+
+<!-- ═══════════ TAB: PROGRAMME ═══════════ -->
+<div class="panel" id="tab-programs">
+  <div class="prog-list" id="progList"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btnLoadProg">▶ Timer starten</button>
+  </div>
+</div>
+
+<!-- ═══════════ TAB: NEU / BEARBEITEN ═══════════ -->
+<div class="panel" id="tab-new">
+  <div class="form-section">
+    <h3 id="formTitle">Neues Programm</h3>
+    <input type="hidden" id="editId" value="" />
+    <div class="form-row full">
+      <label>Programmname</label>
+      <input type="text" id="fName" placeholder="z.B. Equikinetik Stufe 2" />
+    </div>
+    <div class="form-row">
+      <div>
+        <label>Arbeitszeit (Sek.)</label>
+        <input type="number" id="fWork" value="30" min="1" />
+      </div>
+      <div>
+        <label>Pausenzeit (Sek.)</label>
+        <input type="number" id="fPause" value="15" min="1" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div>
+        <label>Wiederholungen</label>
+        <input type="number" id="fRounds" value="6" min="1" />
+      </div>
+      <div>
+        <label>Vorbereitungszeit (Sek.)</label>
+        <input type="number" id="fPrepare" value="5" min="0" />
+      </div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btnSaveProg">💾 Speichern</button>
+    <button class="btn btn-ghost" id="btnCancelEdit">Abbrechen</button>
+  </div>
+</div>
+
+<div id="toast">✓ Gespeichert</div>
+
+<!-- PWA Install Banner (iPhone: Anleitung) -->
+<div id="installBanner">
+  <div class="install-text">
+    <strong>📲 Als App installieren</strong>
+    Tippe auf <strong>Teilen ↑</strong> → <strong>„Zum Home-Bildschirm"</strong> – dann bleibt der Bildschirm während des Trainings an!
+  </div>
+  <button class="btn-close" id="btnCloseBanner">✕</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  AUDIO ENGINE (Web Audio API – kein Internet)
+// ═══════════════════════════════════════════
+let audioCtx = null;
+
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, duration, type = 'sine', vol = 0.5, delay = 0) {
+  const ctx = getCtx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+  gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + delay + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+  osc.start(ctx.currentTime + delay);
+  osc.stop(ctx.currentTime + delay + duration + 0.05);
+}
+
+// Countdown-Piep (identisch zum Tabeta – kurzer harter Beep)
+function soundBeep() {
+  playTone(1050, 0.09, 'square', 0.45, 0);
+}
+
+// Schrill-Pfiff = "Los!" → hohe Frequenz, kurz, schrill wie ein Trillerpfiff
+function soundStart() {
+  const ctx = getCtx();
+  // Pfiff: schnell ansteigendes FM-Signal
+  const osc  = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(1800, ctx.currentTime);
+  osc.frequency.linearRampToValueAtTime(2400, ctx.currentTime + 0.08);
+  osc.frequency.linearRampToValueAtTime(2000, ctx.currentTime + 0.18);
+  osc.frequency.linearRampToValueAtTime(2500, ctx.currentTime + 0.28);
+  gain.gain.setValueAtTime(0, ctx.currentTime);
+  gain.gain.linearRampToValueAtTime(0.7, ctx.currentTime + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.32);
+  osc.start(ctx.currentTime);
+  osc.stop(ctx.currentTime + 0.35);
+}
+
+// Glocke = Ende der Arbeitsphase / Pause beginnt
+function soundBell(delay = 0) {
+  const ctx = getCtx();
+  // Glocken-Charakter: hohe Grundfrequenz + Oberton, langes Ausklingen
+  [830, 1245, 1660].forEach((freq, i) => {
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const vol = i === 0 ? 0.55 : i === 1 ? 0.3 : 0.15;
+    gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+    gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + delay + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 1.8);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + 2.0);
+  });
+}
+
+// Pause-Ende: einfacher Beep (wie Countdown, aber etwas tiefer)
+function soundPause() {
+  playTone(800, 0.12, 'square', 0.4, 0);
+}
+
+// Letzte Runde: Glocke zweimal
+function soundDone() {
+  soundBell(0);
+  soundBell(2.2);
+}
+
+// ═══════════════════════════════════════════
+//  DEFAULT PROGRAMMES (Equikinetik Stufen)
+// ═══════════════════════════════════════════
+const DEFAULT_PROGRAMS = [
+  // ── Equiclassic Work / Dualaktivierung ───
+  { id: 'ecw6',  name: 'Equiclassic Work / Dualaktivierung · 6 Runden',  work: 180, pause: 60, rounds: 6,  prepare: 30, builtin: true },
+  { id: 'ecw8',  name: 'Equiclassic Work / Dualaktivierung · 8 Runden',  work: 180, pause: 60, rounds: 8,  prepare: 30, builtin: true },
+  { id: 'ecw10', name: 'Equiclassic Work / Dualaktivierung · 10 Runden', work: 180, pause: 60, rounds: 10, prepare: 30, builtin: true },
+  // ── Equikinetik Stufen ────────────────────
+  // Stufe 1: 8 × 60s Arbeit, 45s Pause (deine Anpassung)
+  { id: 'eqs1',  name: 'Equikinetik Stufe 1',  work: 60, pause: 45, rounds: 8,  prepare: 30, builtin: true },
+  // Stufe 2: 10 × 60s / 30s
+  { id: 'eqs2',  name: 'Equikinetik Stufe 2',  work: 60, pause: 30, rounds: 10, prepare: 30, builtin: true },
+  // Stufe 3: 12 × 60s / 30s
+  { id: 'eqs3',  name: 'Equikinetik Stufe 3',  work: 60, pause: 30, rounds: 12, prepare: 30, builtin: true },
+  // Stufe 4: 12 × 90s / 30s
+  { id: 'eqs4',  name: 'Equikinetik Stufe 4',  work: 90, pause: 30, rounds: 12, prepare: 30, builtin: true },
+  // Stufe 5: 14 × 60s / 30s
+  { id: 'eqs5',  name: 'Equikinetik Stufe 5',  work: 60, pause: 30, rounds: 14, prepare: 30, builtin: true },
+  // Stufe 6: 14 × 90s / 30s
+  { id: 'eqs6',  name: 'Equikinetik Stufe 6',  work: 90, pause: 30, rounds: 14, prepare: 30, builtin: true },
+  // Stufe 7: 16 × 60s / 30s
+  { id: 'eqs7',  name: 'Equikinetik Stufe 7',  work: 60, pause: 30, rounds: 16, prepare: 30, builtin: true },
+  // Stufe 8: 16 × 90s / 30s
+  { id: 'eqs8',  name: 'Equikinetik Stufe 8',  work: 90, pause: 30, rounds: 16, prepare: 30, builtin: true },
+];
+
+// ═══════════════════════════════════════════
+//  STATE & STORAGE
+// ═══════════════════════════════════════════
+function loadPrograms() {
+  const saved = JSON.parse(localStorage.getItem('eqPrograms') || '[]');
+  return [...DEFAULT_PROGRAMS, ...saved];
+}
+
+function saveCustomPrograms(progs) {
+  localStorage.setItem('eqPrograms', JSON.stringify(progs.filter(p => !p.builtin)));
+}
+
+let programs = loadPrograms();
+let selectedId = null;
+let editingId = null;
+
+// ═══════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'new' && !editingId) resetForm();
+  });
+});
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+}
+
+// ═══════════════════════════════════════════
+//  PROGRAM LIST RENDER
+// ═══════════════════════════════════════════
+function renderPrograms() {
+  programs = loadPrograms();
+  const list = document.getElementById('progList');
+  list.innerHTML = '';
+  programs.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'prog-card' + (p.id === selectedId ? ' selected' : '');
+    card.innerHTML = `
+      <div>
+        <div class="prog-name">${p.name}${p.builtin ? ' <span style="font-size:.65rem;color:var(--muted);font-weight:400;">Voreinstellung</span>' : ''}</div>
+        <div class="prog-meta">⏱ ${p.work}s Arbeit · ⏸ ${p.pause}s Pause · 🔁 ${p.rounds}x</div>
+      </div>
+      <div class="prog-actions">
+        ${!p.builtin ? `<button title="Bearbeiten" data-edit="${p.id}">✏️</button><button title="Löschen" data-del="${p.id}">🗑️</button>` : ''}
+      </div>
+    `;
+    card.addEventListener('click', (e) => {
+      if (e.target.dataset.edit || e.target.dataset.del) return;
+      selectedId = p.id;
+      renderPrograms();
+    });
+    // edit / delete
+    card.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => startEdit(p.id)));
+    card.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => deleteProgram(p.id)));
+    list.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════
+//  FORM
+// ═══════════════════════════════════════════
+function resetForm() {
+  editingId = null;
+  document.getElementById('formTitle').textContent = 'Neues Programm';
+  document.getElementById('editId').value = '';
+  document.getElementById('fName').value = '';
+  document.getElementById('fWork').value = 30;
+  document.getElementById('fPause').value = 15;
+  document.getElementById('fRounds').value = 6;
+  document.getElementById('fPrepare').value = 5;
+}
+
+function startEdit(id) {
+  const p = programs.find(x => x.id === id);
+  if (!p || p.builtin) return;
+  editingId = id;
+  document.getElementById('formTitle').textContent = 'Programm bearbeiten';
+  document.getElementById('editId').value = id;
+  document.getElementById('fName').value = p.name;
+  document.getElementById('fWork').value = p.work;
+  document.getElementById('fPause').value = p.pause;
+  document.getElementById('fRounds').value = p.rounds;
+  document.getElementById('fPrepare').value = p.prepare ?? 5;
+  switchTab('new');
+}
+
+document.getElementById('btnSaveProg').addEventListener('click', () => {
+  const name    = document.getElementById('fName').value.trim();
+  const work    = parseInt(document.getElementById('fWork').value);
+  const pause   = parseInt(document.getElementById('fPause').value);
+  const rounds  = parseInt(document.getElementById('fRounds').value);
+  const prepare = parseInt(document.getElementById('fPrepare').value);
+  if (!name || !work || !pause || !rounds) { showToast('⚠️ Bitte alle Felder ausfüllen'); return; }
+
+  const custom = programs.filter(p => !p.builtin);
+  if (editingId) {
+    const idx = custom.findIndex(p => p.id === editingId);
+    if (idx >= 0) custom[idx] = { id: editingId, name, work, pause, rounds, prepare };
+  } else {
+    custom.push({ id: 'c_' + Date.now(), name, work, pause, rounds, prepare });
+  }
+  saveCustomPrograms(custom);
+  programs = loadPrograms();
+  renderPrograms();
+  resetForm();
+  switchTab('programs');
+  showToast('✓ Programm gespeichert');
+});
+
+document.getElementById('btnCancelEdit').addEventListener('click', () => {
+  resetForm();
+  switchTab('programs');
+});
+
+function deleteProgram(id) {
+  if (!confirm('Programm löschen?')) return;
+  const custom = programs.filter(p => !p.builtin && p.id !== id);
+  saveCustomPrograms(custom);
+  if (selectedId === id) selectedId = null;
+  programs = loadPrograms();
+  renderPrograms();
+}
+
+// ═══════════════════════════════════════════
+//  LOAD PROGRAM → TIMER
+// ═══════════════════════════════════════════
+document.getElementById('btnLoadProg').addEventListener('click', () => {
+  if (!selectedId) { showToast('⚠️ Bitte erst ein Programm wählen'); return; }
+  const p = programs.find(x => x.id === selectedId);
+  if (!p) return;
+  loadTimer(p);
+  switchTab('timer');
+});
+
+// ═══════════════════════════════════════════
+//  TIMER ENGINE
+// ═══════════════════════════════════════════
+let timerProg = null;
+let timerState = 'idle'; // idle | prepare | work | pause | done
+let timerRound = 1;
+let timerSeconds = 0;
+let timerTotal = 0;
+let timerInterval = null;
+let timerRunning = false;
+
+function loadTimer(p) {
+  stopTimer();
+  timerProg = p;
+  timerState = 'idle';
+  timerRound = 1;
+  timerRunning = false;
+  document.getElementById('timerProgName').textContent = p.name;
+  document.getElementById('phaseLabel').className = 'phase-label';
+  document.getElementById('phaseLabel').textContent = 'Bereit';
+  document.getElementById('roundInfo').textContent = `Runde 1 von ${p.rounds}`;
+  document.getElementById('btnPlay').textContent = '▶';
+  const prep = p.prepare > 0 ? p.prepare : p.work;
+  setClockDisplay(prep, 'idle');
+  setProgress(0, 'work');
+}
+
+function setClockDisplay(secs, phase) {
+  const m = String(Math.floor(secs / 60)).padStart(2, '0');
+  const s = String(secs % 60).padStart(2, '0');
+  document.getElementById('clock').textContent = `${m}:${s}`;
+  document.getElementById('clock').className = 'clock ' + (phase === 'work' ? 'work' : phase === 'pause' ? 'pause' : '');
+}
+
+function setPhaseLabel(text, cls) {
+  const el = document.getElementById('phaseLabel');
+  el.textContent = text;
+  el.className = 'phase-label ' + cls;
+}
+
+function setProgress(pct, phase) {
+  const el = document.getElementById('progressFill');
+  el.style.width = pct + '%';
+  el.className = 'progress-bar-fill ' + (phase === 'pause' ? 'pause' : '');
+}
+
+function startTimer() {
+  if (!timerProg) return;
+  timerRunning = true;
+  document.getElementById('btnPlay').textContent = '⏸';
+
+  if (timerState === 'idle') {
+    if (timerProg.prepare > 0) {
+      timerState = 'prepare';
+      timerSeconds = timerProg.prepare;
+      timerTotal = timerProg.prepare;
+      setPhaseLabel('Vorbereitung', '');
+    } else {
+      beginWork();
+      return;
+    }
+  }
+
+  timerInterval = setInterval(tick, 1000);
+}
+
+function beginWork() {
+  timerState = 'work';
+  timerSeconds = timerProg.work;
+  timerTotal = timerProg.work;
+  setPhaseLabel(`Arbeit · Runde ${timerRound}`, 'work');
+  document.getElementById('roundInfo').textContent = `Runde ${timerRound} von ${timerProg.rounds}`;
+  soundStart(); // Schrill-Pfiff → Los!
+  // Sprachansage nach dem Pfiff
+  const isLast = timerRound === timerProg.rounds;
+  const text = isLast
+    ? `Runde ${timerRound} – letzte Runde!`
+    : `Runde ${timerRound}`;
+  speak(text, 500);
+}
+
+function beginPause() {
+  timerState = 'pause';
+  timerSeconds = timerProg.pause;
+  timerTotal = timerProg.pause;
+  setPhaseLabel('Pause', 'pause');
+  // Glocke wird bereits in tick() vor beginPause() ausgelöst
+}
+
+function tick() {
+  if (!timerRunning) return;
+
+  // Countdown-Pieps bei 3, 2, 1
+  if (timerSeconds <= 3 && timerSeconds > 0 && (timerState === 'work' || timerState === 'pause' || timerState === 'prepare')) {
+    soundBeep();
+  }
+
+  const pct = ((timerTotal - timerSeconds) / timerTotal) * 100;
+  setProgress(pct, timerState);
+  setClockDisplay(timerSeconds, timerState);
+
+  timerSeconds--;
+
+  if (timerSeconds < 0) {
+    // Phase beendet
+    if (timerState === 'prepare') {
+      clearInterval(timerInterval);
+      beginWork();
+      timerInterval = setInterval(tick, 1000);
+    } else if (timerState === 'work') {
+      if (timerRound >= timerProg.rounds) {
+        // Letzte Runde fertig → Glocke 2x!
+        clearInterval(timerInterval);
+        timerState = 'done';
+        timerRunning = false;
+        setPhaseLabel('Fertig! 🎉', 'done');
+        document.getElementById('clock').textContent = '00:00';
+        document.getElementById('clock').className = 'clock';
+        document.getElementById('roundInfo').textContent = `Alle ${timerProg.rounds} Runden geschafft! 🐴`;
+        document.getElementById('btnPlay').textContent = '▶';
+        setProgress(100, 'work');
+        soundDone(); // Glocke 2x
+      } else {
+        // Arbeitsphase → Pause: Glocke 1x
+        clearInterval(timerInterval);
+        soundBell(0);
+        beginPause();
+        timerInterval = setInterval(tick, 1000);
+      }
+    } else if (timerState === 'pause') {
+      timerRound++;
+      clearInterval(timerInterval);
+      beginWork(); // Pfiff beim Start der nächsten Runde
+      timerInterval = setInterval(tick, 1000);
+    }
+  }
+}
+
+function pauseTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('btnPlay').textContent = '▶';
+}
+
+function stopTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function resetTimer() {
+  stopTimer();
+  if (timerProg) {
+    loadTimer(timerProg);
+  } else {
+    timerState = 'idle';
+    setClockDisplay(0, 'idle');
+    setPhaseLabel('–', '');
+  }
+}
+
+function skipPhase() {
+  if (!timerProg || timerState === 'idle' || timerState === 'done') return;
+  clearInterval(timerInterval);
+  timerSeconds = 0;
+  if (timerState === 'prepare') {
+    beginWork();
+  } else if (timerState === 'work') {
+    if (timerRound >= timerProg.rounds) {
+      timerState = 'done';
+      timerRunning = false;
+      setPhaseLabel('Fertig! 🎉', 'done');
+      document.getElementById('clock').textContent = '00:00';
+      document.getElementById('clock').className = 'clock';
+      document.getElementById('roundInfo').textContent = `Alle ${timerProg.rounds} Runden geschafft! 🐴`;
+      document.getElementById('btnPlay').textContent = '▶';
+      setProgress(100, 'work');
+      soundDone(); // Glocke 2x
+      return;
+    }
+    soundBell(0);
+    beginPause();
+  } else if (timerState === 'pause') {
+    timerRound++;
+    beginWork();
+  }
+  if (timerRunning) timerInterval = setInterval(tick, 1000);
+}
+
+document.getElementById('btnPlay').addEventListener('click', () => {
+  // Unlock audio on first user gesture
+  getCtx();
+  if (timerRunning) {
+    pauseTimer();
+    releaseWakeLock();
+  } else {
+    if (timerState === 'done' || timerState === 'idle') {
+      if (timerProg) loadTimer(timerProg);
+    }
+    startTimer();
+    requestWakeLock();
+  }
+});
+
+document.getElementById('btnReset').addEventListener('click', resetTimer);
+document.getElementById('btnSkip').addEventListener('click', skipPhase);
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════
+//  SPRACHANSAGE (Web Speech API)
+// ═══════════════════════════════════════════
+function speak(text, delayMs = 400) {
+  if (!('speechSynthesis' in window)) return;
+  setTimeout(() => {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'de-DE';
+    utt.rate = 0.95;
+    utt.pitch = 1.0;
+    utt.volume = 1.0;
+    window.speechSynthesis.speak(utt);
+  }, delayMs);
+}
+
+// ═══════════════════════════════════════════
+//  WELCOME MODAL
+// ═══════════════════════════════════════════
+document.getElementById('btnWelcomeOk').addEventListener('click', () => {
+  document.getElementById('welcomeOverlay').classList.add('hidden');
+  // Audio Context vorbereiten nach User-Geste
+  getCtx();
+  // Speech kurz "aufwärmen" damit iOS nicht die erste Ansage schluckt
+  if ('speechSynthesis' in window) {
+    const warmup = new SpeechSynthesisUtterance('');
+    window.speechSynthesis.speak(warmup);
+  }
+});
+
+// ═══════════════════════════════════════════
+//  SCREEN WAKE LOCK
+// ═══════════════════════════════════════════
+let wakeLock = null;
+
+async function requestWakeLock() {
+  if (!('wakeLock' in navigator)) {
+    document.getElementById('wakeLockIndicator').textContent = '';
+    return;
+  }
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    const el = document.getElementById('wakeLockIndicator');
+    el.textContent = '🟢 Bildschirm bleibt an';
+    el.classList.add('active');
+    wakeLock.addEventListener('release', () => {
+      el.textContent = '⚪ Wake Lock freigegeben';
+      el.classList.remove('active');
+    });
+  } catch (e) {
+    document.getElementById('wakeLockIndicator').textContent = '⚠️ Wake Lock nicht verfügbar';
+  }
+}
+
+async function releaseWakeLock() {
+  if (wakeLock) {
+    await wakeLock.release();
+    wakeLock = null;
+  }
+  const el = document.getElementById('wakeLockIndicator');
+  el.textContent = '';
+  el.classList.remove('active');
+}
+
+// Wake Lock beim Seitenwechsel zurückholen
+document.addEventListener('visibilitychange', async () => {
+  if (wakeLock !== null && document.visibilityState === 'visible' && timerRunning) {
+    await requestWakeLock();
+  }
+});
+
+// ═══════════════════════════════════════════
+//  PWA INSTALL BANNER (iPhone)
+// ═══════════════════════════════════════════
+function showInstallBannerIfNeeded() {
+  // Nur zeigen wenn: iOS Safari + noch nicht installiert
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const dismissed = sessionStorage.getItem('installBannerDismissed');
+  if (isIos && !isStandalone && !dismissed) {
+    document.getElementById('installBanner').classList.add('visible');
+  }
+}
+
+document.getElementById('btnCloseBanner').addEventListener('click', () => {
+  document.getElementById('installBanner').classList.remove('visible');
+  sessionStorage.setItem('installBannerDismissed', '1');
+});
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+renderPrograms();
+showInstallBannerIfNeeded();
+</script>
+</body>
+</html>
