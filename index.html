@@ -419,6 +419,147 @@
     }
     #welcomeModal .hint-box span { display: block; }
 
+
+    /* ── INFO BUTTON ────────────────────────── */
+    #btnInfo {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: color .2s, border-color .2s;
+    }
+    #btnInfo:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── THEORY MODAL ───────────────────────── */
+    #theoryOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.8);
+      z-index: 300;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    #theoryOverlay.hidden { display: none; }
+    #theoryModal {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 520px;
+      padding: 0 0 24px;
+      margin: auto;
+    }
+    .theory-header {
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1;
+    }
+    .theory-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+    #btnCloseTheory {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    /* theory tabs */
+    .theory-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 16px 0;
+      overflow-x: auto;
+    }
+    .theory-tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px 8px 0 0;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .78rem;
+      font-weight: 500;
+      padding: 8px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color .2s, background .2s;
+    }
+    .theory-tab.active { background: var(--card); color: var(--accent); border-bottom-color: var(--card); }
+
+    .theory-content {
+      display: none;
+      padding: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: none;
+      margin: 0 16px;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+    .theory-content.active { display: block; }
+
+    /* theory sections */
+    .t-section { margin-bottom: 20px; }
+    .t-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .t-p { font-size: .85rem; line-height: 1.7; color: var(--text); margin-bottom: 8px; }
+    .t-hint {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px;
+      padding: 9px 12px;
+      font-size: .82rem;
+      color: var(--muted);
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+    .t-steps { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+    .t-step { display: flex; gap: 10px; align-items: flex-start; background: var(--surface); border-radius: 8px; padding: 10px 12px; }
+    .t-step-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent); line-height: 1; min-width: 20px; }
+    .t-step-text { font-size: .83rem; line-height: 1.6; color: var(--text); }
+    .t-step-text strong { color: var(--accent); }
+    .t-hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+    .t-sketch { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin: 10px 0; }
+    .t-sketch-label { font-size: .72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+    .t-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .t-legend-item { display: flex; align-items: center; gap: 5px; font-size: .75rem; color: var(--muted); }
+    .t-legend-box { width: 22px; height: 8px; border-radius: 2px; }
+    .t-legend-circle { width: 12px; height: 12px; border-radius: 50%; border: 2px solid; }
+    .t-table-wrap { overflow-x: auto; margin-top: 10px; }
+    .t-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .t-table th { background: var(--surface); color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; font-size: .7rem; padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+    .t-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .t-table tr:last-child td { border-bottom: none; }
+    .t-table tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+    .stufe-b { display: inline-block; background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 1px 7px; font-family: 'Bebas Neue', sans-serif; font-size: .9rem; letter-spacing: 1px; color: var(--accent); }
+    .lv1 td:first-child { border-left: 3px solid #4e9e8c; }
+    .lv2 td:first-child { border-left: 3px solid #c8a96e; }
+    .lv3 td:first-child { border-left: 3px solid #e07070; }
     @media (max-width: 380px) {
       .form-row { grid-template-columns: 1fr; }
     }
@@ -445,6 +586,7 @@
     <h1>🐴 Equikinetik Timer</h1>
     <span class="sub">Intervall-Training mit Pferden</span>
   </div>
+  <button id="btnInfo">ℹ️ Theorie</button>
 </header>
 
 <div class="tabs" id="tabs">
@@ -536,6 +678,168 @@
   <button class="btn-close" id="btnCloseBanner">✕</button>
 </div>
 
+<!-- ═══ THEORY MODAL ═══ -->
+<div id="theoryOverlay" class="hidden">
+  <div id="theoryModal">
+    <div class="theory-header">
+      <h2>🐴 Trainingstheorie</h2>
+      <button id="btnCloseTheory">✕</button>
+    </div>
+    <div class="theory-tabs">
+      <button class="theory-tab active" data-ttab="eq">Equikinetik</button>
+      <button class="theory-tab" data-ttab="da">Dualaktivierung</button>
+      <button class="theory-tab" data-ttab="ecw">Equiclassic Work</button>
+    </div>
+
+    <!-- ── EQUIKINETIK ── -->
+    <div class="theory-content active" id="ttab-eq">
+      <div class="t-section">
+        <div class="t-title"><span>📖</span> Was ist Equikinetik?</div>
+        <p class="t-p">Equikinetik ist ein Longentraining auf der <strong>Quadratvolte</strong> – einem 6–8 m großen Quadrat, das durch abwechselnd <strong style="color:#c8a96e">gelbe</strong> und <strong style="color:#6e9ec8">blaue</strong> Gassen markiert wird. Das Pferd wird auf der Longe durch die Gassen geführt und lernt dabei, sich gleichmäßig und körperlich ausgewogen zu bewegen.</p>
+        <p class="t-p">Die Gassen wechseln bei jedem Training ihre Position – mal ist die <strong style="color:#c8a96e">gelbe</strong> Gasse innen, mal außen. So wird das Pferd immer wieder neu herausgefordert.</p>
+        <div class="t-hint">🐴 <strong>Stellung:</strong> Das Pferd wird stets <strong>nach innen gestellt</strong> – jedoch keinesfalls übergestellt. Korrekt: <strong>äußeres Auge auf Höhe des Buggelenks</strong>.</div>
+        <div class="t-hint">👣 <strong>Gangart:</strong> Schritt und Trab möglich. Immer eine <strong>gerade Anzahl Runden</strong> je Gangart einplanen. <strong>Handwechsel nach jeder Trainingsrunde.</strong></div>
+        <div class="t-hint">💡 Alle Übungen finden <strong>ohne Reiter</strong> statt – nur mit Longe.</div>
+      </div>
+
+      <div class="t-hr"></div>
+
+      <div class="t-section">
+        <div class="t-title"><span>🔧</span> Aufbau der Quadratvolte</div>
+        <div class="t-steps">
+          <div class="t-step"><div class="t-step-num">1</div><div class="t-step-text"><strong>Kreuz legen:</strong> Zwei Gassen horizontal hintereinander (<strong style="color:#6e9ec8">blau</strong>) und zwei vertikal hintereinander (<strong style="color:#c8a96e">gelb</strong>). Gleiche Farbe immer hintereinander.</div></div>
+          <div class="t-step"><div class="t-step-num">2</div><div class="t-step-text"><strong>Außengassen ergänzen:</strong> Außen je eine Gasse in der anderen Farbe – oben/unten <strong style="color:#c8a96e">gelb</strong>, links/rechts <strong style="color:#6e9ec8">blau</strong>.</div></div>
+          <div class="t-step"><div class="t-step-num">3</div><div class="t-step-text"><strong>Mittelkreuz abbauen</strong> und ganz außen als Begrenzung legen – ca. <strong>1–1,5 m Abstand</strong> von den inneren Gassen.</div></div>
+          <div class="t-step"><div class="t-step-num">4</div><div class="t-step-text">Fertige <strong>6–8 m Quadratvolte</strong>: innen oben/unten <strong style="color:#c8a96e">gelb</strong>, innen links/rechts <strong style="color:#6e9ec8">blau</strong> – außen jeweils umgekehrt.</div></div>
+        </div>
+
+        <div class="t-hr"></div>
+
+        <!-- Draufsicht -->
+        <div class="t-sketch">
+          <div class="t-sketch-label">Fertige Quadratvolte – Draufsicht</div>
+          <svg viewBox="0 0 300 300" width="100%" style="max-width:280px;display:block;margin:0 auto;">
+            <rect width="300" height="300" fill="#1a1d27" rx="8"/>
+            <defs>
+              <marker id="tarr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7a8099"/></marker>
+              <marker id="tarr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill="#7a8099"/></marker>
+              <marker id="tharr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e07070"/></marker>
+            </defs>
+            <rect x="100" y="68" width="100" height="13" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="1.5"/>
+            <rect x="100" y="219" width="100" height="13" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="1.5"/>
+            <rect x="68" y="100" width="13" height="100" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1.5"/>
+            <rect x="219" y="100" width="13" height="100" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1.5"/>
+            <rect x="100" y="30" width="100" height="13" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1.5"/>
+            <rect x="100" y="257" width="100" height="13" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1.5"/>
+            <rect x="30" y="100" width="13" height="100" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="1.5"/>
+            <rect x="257" y="100" width="13" height="100" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="1.5"/>
+            <circle cx="150" cy="150" r="98" fill="none" stroke="#e07070" stroke-width="2.5" opacity="0.85"/>
+            <line x1="52" y1="150" x2="248" y2="150" stroke="#7a8099" stroke-width="1" marker-end="url(#tarr)" marker-start="url(#tarr2)"/>
+            <text x="150" y="144" fill="#7a8099" font-size="9" text-anchor="middle">6 – 8 m</text>
+            <circle cx="150" cy="150" r="4" fill="#e8e4dc" opacity="0.35"/>
+            <text x="150" y="165" fill="#7a8099" font-size="8" text-anchor="middle">Longe</text>
+            <path d="M150,52 A98,98 0 0,1 248,150" fill="none" stroke="#e07070" stroke-width="2.5" marker-end="url(#tharr)" opacity="0.9"/>
+            <text x="150" y="63" fill="#c8a96e" font-size="7" text-anchor="middle" font-weight="600">GELB (innen)</text>
+            <text x="150" y="244" fill="#c8a96e" font-size="7" text-anchor="middle" font-weight="600">GELB (innen)</text>
+            <text x="57" y="153" fill="#6e9ec8" font-size="7" text-anchor="middle" transform="rotate(-90,57,153)" font-weight="600">BLAU (innen)</text>
+            <text x="243" y="153" fill="#6e9ec8" font-size="7" text-anchor="middle" transform="rotate(90,243,153)" font-weight="600">BLAU (innen)</text>
+            <text x="150" y="25" fill="#6e9ec8" font-size="7" text-anchor="middle" font-weight="600">BLAU (außen)</text>
+            <text x="150" y="282" fill="#6e9ec8" font-size="7" text-anchor="middle" font-weight="600">BLAU (außen)</text>
+            <text x="19" y="153" fill="#c8a96e" font-size="7" text-anchor="middle" transform="rotate(-90,19,153)" font-weight="600">GELB (außen)</text>
+            <text x="281" y="153" fill="#c8a96e" font-size="7" text-anchor="middle" transform="rotate(90,281,153)" font-weight="600">GELB (außen)</text>
+          </svg>
+          <div class="t-legend">
+            <div class="t-legend-item"><div class="t-legend-box" style="background:#c8a96e;"></div>Gelbe Gasse</div>
+            <div class="t-legend-item"><div class="t-legend-box" style="background:#6e9ec8;"></div>Blaue Gasse</div>
+            <div class="t-legend-item"><div class="t-legend-circle" style="border-color:#e07070;"></div>Longierbahn</div>
+          </div>
+        </div>
+
+        <!-- Schritt für Schritt -->
+        <div class="t-sketch">
+          <div class="t-sketch-label">Aufbau – Schritt für Schritt</div>
+          <svg viewBox="0 0 370 140" width="100%" style="display:block;margin:0 auto;">
+            <rect width="370" height="140" fill="#1a1d27" rx="8"/>
+            <text x="42" y="11" fill="#7a8099" font-size="8" text-anchor="middle">① Kreuz legen</text>
+            <rect x="8"  y="63" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="50" y="63" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="38" y="25" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <rect x="38" y="83" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <polygon points="42,59 46,66 38,66" fill="#c8a96e" opacity="0.8"/>
+            <text x="96" y="72" fill="#c8a96e" font-size="14" text-anchor="middle">→</text>
+            <text x="165" y="11" fill="#7a8099" font-size="8" text-anchor="middle">② Außengassen</text>
+            <rect x="131" y="63" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="173" y="63" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="161" y="25" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <rect x="161" y="83" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <polygon points="165,59 169,66 161,66" fill="#c8a96e" opacity="0.8"/>
+            <rect x="151" y="15" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="151" y="111" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="119" y="53" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <rect x="203" y="53" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <text x="228" y="72" fill="#c8a96e" font-size="14" text-anchor="middle">→</text>
+            <text x="308" y="11" fill="#c8a96e" font-size="8" text-anchor="middle">③ Fertige Volte</text>
+            <g transform="translate(248,9) scale(0.41)">
+              <rect x="100" y="68" width="100" height="13" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="2"/>
+              <rect x="100" y="219" width="100" height="13" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="2"/>
+              <rect x="68" y="100" width="13" height="100" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="2"/>
+              <rect x="219" y="100" width="13" height="100" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="2"/>
+              <rect x="100" y="30" width="100" height="13" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="2"/>
+              <rect x="100" y="257" width="100" height="13" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="2"/>
+              <rect x="30" y="100" width="13" height="100" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="2"/>
+              <rect x="257" y="100" width="13" height="100" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="2"/>
+              <circle cx="150" cy="150" r="98" fill="none" stroke="#e07070" stroke-width="4" opacity="0.85"/>
+              <circle cx="150" cy="150" r="7" fill="#e8e4dc" opacity="0.35"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="t-hr"></div>
+
+      <div class="t-section">
+        <div class="t-title"><span>📊</span> Trainingsstufen</div>
+        <p class="t-p">Alle Stufen auf der Quadratvolte mit Longe. Stufe 1 mit 45 Sek. Pause (angepasst).</p>
+        <div class="t-table-wrap">
+          <table class="t-table">
+            <thead><tr><th>Stufe</th><th>Einh.</th><th>Arbeit</th><th>Pause</th><th>Gesamt</th></tr></thead>
+            <tbody>
+              <tr class="lv1"><td><span class="stufe-b">1</span></td><td>8 ×</td><td>60 s</td><td>45 s ★</td><td>~17 Min.</td></tr>
+              <tr class="lv1"><td><span class="stufe-b">2</span></td><td>10 ×</td><td>60 s</td><td>30 s</td><td>~15 Min.</td></tr>
+              <tr class="lv1"><td><span class="stufe-b">3</span></td><td>12 ×</td><td>60 s</td><td>30 s</td><td>~18 Min.</td></tr>
+              <tr class="lv2"><td><span class="stufe-b">4</span></td><td>12 ×</td><td>90 s</td><td>30 s</td><td>~24 Min.</td></tr>
+              <tr class="lv2"><td><span class="stufe-b">5</span></td><td>14 ×</td><td>60 s</td><td>30 s</td><td>~21 Min.</td></tr>
+              <tr class="lv2"><td><span class="stufe-b">6</span></td><td>14 ×</td><td>90 s</td><td>30 s</td><td>~28 Min.</td></tr>
+              <tr class="lv3"><td><span class="stufe-b">7</span></td><td>16 ×</td><td>60 s</td><td>30 s</td><td>~24 Min.</td></tr>
+              <tr class="lv3"><td><span class="stufe-b">8</span></td><td>16 ×</td><td>90 s</td><td>30 s</td><td>~32 Min.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="t-hint" style="margin-top:10px;">★ Stufe 1 mit 45 s Pause · Ab Stufe 3 kann auf 90 s gesteigert werden · 🟢 Einsteiger · 🟡 Aufbau · 🔴 Fortgeschritten</div>
+      </div>
+    </div>
+
+    <!-- ── DUALAKTIVIERUNG ── -->
+    <div class="theory-content" id="ttab-da">
+      <div class="t-section">
+        <div class="t-title"><span>📖</span> Dualaktivierung</div>
+        <p class="t-p">Inhalte folgen in Kürze. 🐴</p>
+      </div>
+    </div>
+
+    <!-- ── EQUICLASSIC WORK ── -->
+    <div class="theory-content" id="ttab-ecw">
+      <div class="t-section">
+        <div class="t-title"><span>📖</span> Equiclassic Work</div>
+        <p class="t-p">Inhalte folgen in Kürze. 🐴</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
 <script>
 // ═══════════════════════════════════════════
 //  AUDIO ENGINE (Web Audio API – kein Internet)
@@ -1145,11 +1449,36 @@ document.getElementById('btnCloseBanner').addEventListener('click', () => {
   sessionStorage.setItem('installBannerDismissed', '1');
 });
 
+
+// ═══════════════════════════════════════════
+//  THEORY MODAL
+// ═══════════════════════════════════════════
+document.getElementById('btnInfo').addEventListener('click', () => {
+  document.getElementById('theoryOverlay').classList.remove('hidden');
+});
+document.getElementById('btnCloseTheory').addEventListener('click', () => {
+  document.getElementById('theoryOverlay').classList.add('hidden');
+});
+document.getElementById('theoryOverlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('theoryOverlay')) {
+    document.getElementById('theoryOverlay').classList.add('hidden');
+  }
+});
+document.querySelectorAll('.theory-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.theory-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.theory-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('ttab-' + btn.dataset.ttab).classList.add('active');
+  });
+});
+
 // ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
 renderPrograms();
 showInstallBannerIfNeeded();
 </script>
+
 </body>
 </html>
