@@ -22,8 +22,8 @@
       --surface:  #1a1d27;
       --card:     #21263a;
       --border:   #2e3450;
-      --accent:   #c8a96e;
-      --accent2:  #4e9e8c;
+      --accent:   #c8a96e;   /* warm gold – Pferd, Stroh, Leder */
+      --accent2:  #4e9e8c;   /* sagegreen – Weide */
       --danger:   #e07070;
       --pause:    #6e9ec8;
       --text:     #e8e4dc;
@@ -41,6 +41,7 @@
       align-items: center;
     }
 
+    /* ── HEADER ─────────────────────────────────── */
     header {
       width: 100%;
       background: var(--surface);
@@ -66,6 +67,7 @@
       text-transform: uppercase;
     }
 
+    /* ── TABS ───────────────────────────────────── */
     .tabs {
       display: flex;
       gap: 6px;
@@ -92,6 +94,7 @@
       border-bottom-color: var(--card);
     }
 
+    /* ── MAIN PANEL ─────────────────────────────── */
     .panel {
       display: none;
       width: 100%;
@@ -104,6 +107,7 @@
     }
     .panel.active { display: block; }
 
+    /* ── PROGRAM LIST ───────────────────────────── */
     .prog-list {
       display: flex;
       flex-direction: column;
@@ -137,6 +141,7 @@
     }
     .prog-card .prog-actions button:hover { color: var(--danger); }
 
+    /* ── FORM ───────────────────────────────────── */
     .form-section { margin-top: 16px; }
     .form-section h3 {
       font-size: .8rem;
@@ -167,6 +172,7 @@
     }
     input:focus { border-color: var(--accent); }
 
+    /* ── BUTTONS ────────────────────────────────── */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -207,6 +213,7 @@
       flex-wrap: wrap;
     }
 
+    /* ── TIMER DISPLAY ──────────────────────────── */
     .timer-wrap {
       text-align: center;
       padding: 10px 0 16px;
@@ -247,6 +254,7 @@
       margin-bottom: 4px;
     }
 
+    /* progress bar */
     .progress-bar-wrap {
       width: 100%;
       height: 6px;
@@ -264,6 +272,7 @@
     }
     .progress-bar-fill.pause { background: var(--pause); }
 
+    /* controls */
     .controls {
       display: flex;
       gap: 12px;
@@ -296,12 +305,14 @@
     .ctrl-btn:hover { border-color: var(--accent); }
     .ctrl-btn.play:hover { opacity: .9; }
 
+    /* ── DIVIDER ────────────────────────────────── */
     .divider {
       border: none;
       border-top: 1px solid var(--border);
       margin: 18px 0;
     }
 
+    /* ── TOAST ──────────────────────────────────── */
     #toast {
       position: fixed;
       bottom: 24px;
@@ -319,6 +330,7 @@
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
 
+    /* ── PWA INSTALL BANNER ─────────────────── */
     #installBanner {
       display: none;
       width: 100%;
@@ -355,6 +367,7 @@
       padding: 0 4px;
     }
 
+    /* ── WAKE LOCK INDICATOR ────────────────── */
     #wakeLockIndicator {
       font-size: .7rem;
       color: var(--muted);
@@ -364,6 +377,7 @@
     }
     #wakeLockIndicator.active { color: var(--accent2); }
 
+    /* ── WELCOME MODAL ──────────────────────── */
     #welcomeOverlay {
       position: fixed;
       inset: 0;
@@ -405,6 +419,8 @@
     }
     #welcomeModal .hint-box span { display: block; }
 
+
+    /* ── INFO BUTTON ────────────────────────── */
     #btnInfo {
       background: none;
       border: 1px solid var(--border);
@@ -417,6 +433,7 @@
     }
     #btnInfo:hover { color: var(--accent); border-color: var(--accent); }
 
+    /* ── THEORY MODAL ───────────────────────── */
     #theoryOverlay {
       position: fixed;
       inset: 0;
@@ -465,6 +482,7 @@
       padding: 0 4px;
     }
 
+    /* theory tabs */
     .theory-tabs {
       display: flex;
       gap: 4px;
@@ -497,6 +515,7 @@
     }
     .theory-content.active { display: block; }
 
+    /* theory sections */
     .t-section { margin-bottom: 20px; }
     .t-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -541,181 +560,6 @@
     .lv1 td:first-child { border-left: 3px solid #4e9e8c; }
     .lv2 td:first-child { border-left: 3px solid #c8a96e; }
     .lv3 td:first-child { border-left: 3px solid #e07070; }
-
-    /* ── STATISTIK TAB ──────────────────────────── */
-    .stat-summary {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px 12px;
-      text-align: center;
-    }
-    .stat-card .stat-val {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem;
-      letter-spacing: 2px;
-      color: var(--accent);
-      line-height: 1;
-    }
-    .stat-card .stat-lbl {
-      font-size: .72rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    .stat-section-title {
-      font-size: .75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--muted);
-      margin: 18px 0 10px;
-    }
-    .stat-entry {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-    .stat-entry .stat-date {
-      font-size: .75rem;
-      color: var(--muted);
-      min-width: 80px;
-      padding-top: 2px;
-    }
-    .stat-entry .stat-info { flex: 1; }
-    .stat-entry .stat-prog {
-      font-weight: 600;
-      font-size: .9rem;
-      color: var(--text);
-    }
-    .stat-entry .stat-meta {
-      font-size: .78rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    .stat-entry .stat-note {
-      font-size: .8rem;
-      color: var(--accent);
-      margin-top: 4px;
-      font-style: italic;
-    }
-    .stat-entry .stat-del {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: .9rem;
-      padding: 2px 4px;
-      transition: color .2s;
-    }
-    .stat-entry .stat-del:hover { color: var(--danger); }
-    .stat-empty {
-      text-align: center;
-      color: var(--muted);
-      font-size: .85rem;
-      padding: 30px 0;
-    }
-    .stat-clear-btn { margin-top: 14px; width: 100%; }
-
-    /* ── NOTIZ MODAL ────────────────────────────── */
-    #notizOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.75);
-      z-index: 400;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    #notizOverlay.hidden { display: none; }
-    #notizModal {
-      background: var(--card);
-      border: 1px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 24px 20px 20px;
-      max-width: 360px;
-      width: 100%;
-    }
-    #notizModal h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.3rem;
-      letter-spacing: 2px;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-    #notizModal p {
-      font-size: .82rem;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
-    #notizText {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: .9rem;
-      padding: 10px 12px;
-      resize: vertical;
-      min-height: 80px;
-      outline: none;
-    }
-    #notizText:focus { border-color: var(--accent); }
-    .notiz-btn-row { display: flex; gap: 10px; margin-top: 14px; }
-
-    /* ── VIBRATIONS TOGGLE ──────────────────────── */
-    .vib-toggle-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-    }
-    .vib-toggle-wrap .vib-lbl { font-size: .85rem; color: var(--text); }
-    .vib-toggle-wrap .vib-sub { font-size: .75rem; color: var(--muted); margin-top: 2px; }
-    .toggle-switch {
-      position: relative;
-      width: 44px;
-      height: 24px;
-      flex-shrink: 0;
-    }
-    .toggle-switch input { opacity: 0; width: 0; height: 0; }
-    .toggle-slider {
-      position: absolute;
-      inset: 0;
-      background: var(--border);
-      border-radius: 99px;
-      cursor: pointer;
-      transition: background .2s;
-    }
-    .toggle-slider::before {
-      content: '';
-      position: absolute;
-      width: 18px; height: 18px;
-      left: 3px; top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: transform .2s;
-    }
-    .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
-    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
-
     @media (max-width: 380px) {
       .form-row { grid-template-columns: 1fr; }
     }
@@ -723,32 +567,32 @@
 </head>
 <body>
 
+<!-- WELCOME MODAL -->
 <div id="welcomeOverlay">
   <div id="welcomeModal">
     <div class="horse-icon">🐴</div>
-    <h2>Equikinetik Timer</h2>
+    <h2>Bereit fürs Training?</h2>
     <div class="hint-box">
-      <span>1. Wähle ein Programm unter <strong>Programme</strong></span>
-      <span>2. Tippe <strong>▶ Timer starten</strong></span>
-      <span>3. Starte mit dem großen <strong>▶</strong> Button</span>
+      <span>🔆 <strong>Bildschirm bleibt automatisch an</strong> – damit du alle Töne hörst.</span>
+      <span style="margin-top:8px;">🚫 Bitte den Bildschirm <strong>nicht manuell sperren</strong> – sonst sind die Töne weg.</span>
+      <span style="margin-top:8px;">📱 Leg dein Handy auf die <strong>Bande</strong>, konzentrier dich und <strong>zähl die Runden</strong> – die App sagt dir nach jedem Pfiff welche Runde das ist!</span>
     </div>
-    <button class="btn btn-primary" style="width:100%" onclick="document.getElementById('welcomeOverlay').classList.add('hidden')">Los geht's 🐴</button>
+    <button class="btn btn-primary" id="btnWelcomeOk" style="width:100%;padding:14px;">Los geht's! 🎯</button>
   </div>
 </div>
 
 <header>
   <div>
-    <h1>EQ Timer</h1>
-    <span class="sub">Equikinetik &amp; Classic Work</span>
+    <h1>🐴 Equikinetik Timer</h1>
+    <span class="sub">Intervall-Training mit Pferden</span>
   </div>
-  <button id="btnInfo">ℹ Theorie</button>
+  <button id="btnInfo">ℹ️ Theorie</button>
 </header>
 
 <div class="tabs" id="tabs">
   <button class="tab-btn active" data-tab="timer">▶ Timer</button>
   <button class="tab-btn" data-tab="programs">📋 Programme</button>
   <button class="tab-btn" data-tab="new">＋ Neu</button>
-  <button class="tab-btn" data-tab="stats">📊 Statistik</button>
 </div>
 
 <!-- ═══════════ TAB: TIMER ═══════════ -->
@@ -794,162 +638,208 @@
     <input type="hidden" id="editId" value="" />
     <div class="form-row full">
       <label>Programmname</label>
-      <input type="text" id="fName" placeholder="z. B. Equikinetik Stufe 1" />
+      <input type="text" id="fName" placeholder="z.B. Equikinetik Stufe 2" />
     </div>
     <div class="form-row">
-      <div>
-        <label>Runden</label>
-        <input type="number" id="fRounds" min="1" max="99" value="6" />
-      </div>
       <div>
         <label>Arbeitszeit (Sek.)</label>
-        <input type="number" id="fWork" min="5" max="3600" value="120" />
+        <input type="number" id="fWork" value="30" min="1" />
+      </div>
+      <div>
+        <label>Pausenzeit (Sek.)</label>
+        <input type="number" id="fPause" value="15" min="1" />
       </div>
     </div>
     <div class="form-row">
       <div>
-        <label>Pause (Sek.)</label>
-        <input type="number" id="fPause" min="0" max="3600" value="30" />
+        <label>Wiederholungen</label>
+        <input type="number" id="fRounds" value="6" min="1" />
       </div>
       <div>
-        <label>Vorbereitung (Sek.)</label>
-        <input type="number" id="fPrepare" min="0" max="60" value="10" />
+        <label>Vorbereitungszeit (Sek.)</label>
+        <input type="number" id="fPrepare" value="5" min="0" />
       </div>
-    </div>
-    <div class="form-row full">
-      <label>Trainingstyp</label>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
-        <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--text)"><input type="checkbox" value="Equikinetik"/> <span>🔄 Equikinetik</span></label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--text)"><input type="checkbox" value="Classic Work"/> <span>🎯 Classic Work</span></label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--text)"><input type="checkbox" value="Longieren"/> <span>⭕ Longieren</span></label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--text)"><input type="checkbox" value="Freiarbeit"/> <span>🌿 Freiarbeit</span></label>
-      </div>
-    </div>
-    <div class="form-row full">
-      <label>Notizen / Beschreibung</label>
-      <input type="text" id="fNotes" placeholder="Optional" />
     </div>
   </div>
   <div class="btn-row">
     <button class="btn btn-primary" id="btnSaveProg">💾 Speichern</button>
-    <button class="btn btn-secondary" id="btnCancelEdit">Abbrechen</button>
-  </div>
-</div>
-
-<!-- ═══════════ TAB: STATISTIK ═══════════ -->
-<div class="panel" id="tab-stats">
-  <div class="stat-summary">
-    <div class="stat-card">
-      <div class="stat-val" id="statTotalSessions">0</div>
-      <div class="stat-lbl">Einheiten</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="statTotalMinutes">0</div>
-      <div class="stat-lbl">Minuten gesamt</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="statTotalRounds">0</div>
-      <div class="stat-lbl">Runden gesamt</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="statStreak">0</div>
-      <div class="stat-lbl">Tage in Folge</div>
-    </div>
-  </div>
-
-  <div class="vib-toggle-wrap">
-    <div>
-      <div class="vib-lbl">📳 Vibration bei Phasenwechsel</div>
-      <div class="vib-sub">Funktioniert auf iPhone und Android</div>
-    </div>
-    <label class="toggle-switch">
-      <input type="checkbox" id="vibToggle" />
-      <span class="toggle-slider"></span>
-    </label>
-  </div>
-
-  <div class="stat-section-title">Letzte Einheiten</div>
-  <div id="statList"><div class="stat-empty">🐴 Noch keine Einheiten abgeschlossen.</div></div>
-  <button class="btn btn-secondary stat-clear-btn" id="btnClearStats">🗑 Verlauf löschen</button>
-</div>
-
-<!-- ═══════════ NOTIZ MODAL ═══════════ -->
-<div id="notizOverlay" class="hidden">
-  <div id="notizModal">
-    <h3>🎉 Einheit abgeschlossen!</h3>
-    <p id="notizProgInfo">Programm abgeschlossen</p>
-    <label style="font-size:.8rem;color:var(--muted);display:block;margin-bottom:6px;">Notiz zur Einheit (optional)</label>
-    <textarea id="notizText" placeholder="Wie lief es heute? Besonderheiten, Beobachtungen…"></textarea>
-    <div class="notiz-btn-row">
-      <button class="btn btn-secondary" style="flex:1" id="btnNotizSkip">Überspringen</button>
-      <button class="btn btn-primary" style="flex:1" id="btnNotizSave">💾 Speichern</button>
-    </div>
+    <button class="btn btn-ghost" id="btnCancelEdit">Abbrechen</button>
   </div>
 </div>
 
 <div id="toast">✓ Gespeichert</div>
 
+<!-- PWA Install Banner (iPhone: Anleitung) -->
 <div id="installBanner">
   <div class="install-text">
-    <strong>📱 Als App installieren</strong>
-    Tippe auf <strong>Teilen</strong> → <strong>Zum Home-Bildschirm</strong>
+    <strong>📲 Als App installieren</strong>
+    Tippe auf <strong>Teilen ↑</strong> → <strong>„Zum Home-Bildschirm"</strong> – dann bleibt der Bildschirm während des Trainings an!
   </div>
-  <button class="btn-install" onclick="document.getElementById('installBanner').classList.remove('visible');sessionStorage.setItem('installBannerDismissed','1')">OK</button>
   <button class="btn-close" id="btnCloseBanner">✕</button>
 </div>
 
+<!-- ═══ THEORY MODAL ═══ -->
 <div id="theoryOverlay" class="hidden">
   <div id="theoryModal">
     <div class="theory-header">
-      <h2>📖 Theorie</h2>
+      <h2>🐴 Trainingstheorie</h2>
       <button id="btnCloseTheory">✕</button>
     </div>
     <div class="theory-tabs">
       <button class="theory-tab active" data-ttab="eq">Equikinetik</button>
-      <button class="theory-tab" data-ttab="cw">Classic Work</button>
-      <button class="theory-tab" data-ttab="stufen">Stufen</button>
+      <button class="theory-tab" data-ttab="da">Dualaktivierung</button>
+      <button class="theory-tab" data-ttab="ecw">Equiclassic Work</button>
     </div>
+
+    <!-- ── EQUIKINETIK ── -->
     <div class="theory-content active" id="ttab-eq">
       <div class="t-section">
-        <div class="t-title">🔄 Was ist Equikinetik?</div>
-        <p class="t-p">Equikinetik ist eine Trainingsmethode für Pferde, die auf rhythmischen Bewegungsabläufen basiert. Durch gezielte Wechsel zwischen Arbeits- und Ruhephasen wird die Muskulatur des Pferdes gleichmäßig aufgebaut und die Koordination verbessert.</p>
-        <div class="t-hint">Entwickelt von Gabriele Rachen-Schöneich und Klaus Schöneich – speziell für die natürliche Bewegungsförderung.</div>
+        <div class="t-title"><span>📖</span> Was ist Equikinetik?</div>
+        <p class="t-p">Equikinetik ist ein Longentraining auf der <strong>Quadratvolte</strong> – einem 6–8 m großen Quadrat, das durch abwechselnd <strong style="color:#c8a96e">gelbe</strong> und <strong style="color:#6e9ec8">blaue</strong> Gassen markiert wird. Das Pferd wird auf der Longe durch die Gassen geführt und lernt dabei, sich gleichmäßig und körperlich ausgewogen zu bewegen.</p>
+        <p class="t-p">Die Gassen wechseln bei jedem Training ihre Position – mal ist die <strong style="color:#c8a96e">gelbe</strong> Gasse innen, mal außen. So wird das Pferd immer wieder neu herausgefordert.</p>
+        <div class="t-hint">🐴 <strong>Stellung:</strong> Das Pferd wird stets <strong>nach innen gestellt</strong> – jedoch keinesfalls übergestellt. Korrekt: <strong>äußeres Auge auf Höhe des Buggelenks</strong>.</div>
+        <div class="t-hint">👣 <strong>Gangart:</strong> Schritt und Trab möglich. Immer eine <strong>gerade Anzahl Runden</strong> je Gangart einplanen. <strong>Handwechsel nach jeder Trainingsrunde.</strong></div>
+        <div class="t-hint">💡 Alle Übungen finden <strong>ohne Reiter</strong> statt – nur mit Longe.</div>
       </div>
+
+      <div class="t-hr"></div>
+
       <div class="t-section">
-        <div class="t-title">⏱ Typische Zeitstruktur</div>
+        <div class="t-title"><span>🔧</span> Aufbau der Quadratvolte</div>
         <div class="t-steps">
-          <div class="t-step"><div class="t-step-num">1</div><div class="t-step-text"><strong>Vorbereitung</strong> – Pferd einstellen, Aufmerksamkeit holen (10 Sek.)</div></div>
-          <div class="t-step"><div class="t-step-num">2</div><div class="t-step-text"><strong>Arbeitsphase</strong> – aktive Bewegung, z. B. Longieren oder Handarbeit (60–120 Sek.)</div></div>
-          <div class="t-step"><div class="t-step-num">3</div><div class="t-step-text"><strong>Pause</strong> – Pferd entspannen lassen, Muskel regeneriert (20–30 Sek.)</div></div>
-          <div class="t-step"><div class="t-step-num">4</div><div class="t-step-text"><strong>Wiederholen</strong> – typisch 4–8 Runden pro Einheit</div></div>
+          <div class="t-step"><div class="t-step-num">1</div><div class="t-step-text"><strong>Kreuz legen:</strong> Zwei Gassen horizontal hintereinander (<strong style="color:#6e9ec8">blau</strong>) und zwei vertikal hintereinander (<strong style="color:#c8a96e">gelb</strong>). Gleiche Farbe immer hintereinander.</div></div>
+          <div class="t-step"><div class="t-step-num">2</div><div class="t-step-text"><strong>Außengassen ergänzen:</strong> Außen je eine Gasse in der anderen Farbe – oben/unten <strong style="color:#c8a96e">gelb</strong>, links/rechts <strong style="color:#6e9ec8">blau</strong>.</div></div>
+          <div class="t-step"><div class="t-step-num">3</div><div class="t-step-text"><strong>Mittelkreuz abbauen</strong> und ganz außen als Begrenzung legen – ca. <strong>1–1,5 m Abstand</strong> von den inneren Gassen.</div></div>
+          <div class="t-step"><div class="t-step-num">4</div><div class="t-step-text">Fertige <strong>6–8 m Quadratvolte</strong>: innen oben/unten <strong style="color:#c8a96e">gelb</strong>, innen links/rechts <strong style="color:#6e9ec8">blau</strong> – außen jeweils umgekehrt.</div></div>
+        </div>
+
+        <div class="t-hr"></div>
+
+        <!-- Draufsicht -->
+        <div class="t-sketch">
+          <div class="t-sketch-label">Fertige Quadratvolte – Draufsicht</div>
+          <svg viewBox="0 0 300 300" width="100%" style="max-width:280px;display:block;margin:0 auto;">
+            <rect width="300" height="300" fill="#1a1d27" rx="8"/>
+            <defs>
+              <marker id="tarr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#7a8099"/></marker>
+              <marker id="tarr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill="#7a8099"/></marker>
+              <marker id="tharr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#e07070"/></marker>
+            </defs>
+            <rect x="100" y="68" width="100" height="13" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="1.5"/>
+            <rect x="100" y="219" width="100" height="13" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="1.5"/>
+            <rect x="68" y="100" width="13" height="100" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1.5"/>
+            <rect x="219" y="100" width="13" height="100" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1.5"/>
+            <rect x="100" y="30" width="100" height="13" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1.5"/>
+            <rect x="100" y="257" width="100" height="13" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1.5"/>
+            <rect x="30" y="100" width="13" height="100" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="1.5"/>
+            <rect x="257" y="100" width="13" height="100" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="1.5"/>
+            <circle cx="150" cy="150" r="98" fill="none" stroke="#e07070" stroke-width="2.5" opacity="0.85"/>
+            <line x1="52" y1="150" x2="248" y2="150" stroke="#7a8099" stroke-width="1" marker-end="url(#tarr)" marker-start="url(#tarr2)"/>
+            <text x="150" y="144" fill="#7a8099" font-size="9" text-anchor="middle">6 – 8 m</text>
+            <circle cx="150" cy="150" r="4" fill="#e8e4dc" opacity="0.35"/>
+            <text x="150" y="165" fill="#7a8099" font-size="8" text-anchor="middle">Longe</text>
+            <path d="M150,52 A98,98 0 0,1 248,150" fill="none" stroke="#e07070" stroke-width="2.5" marker-end="url(#tharr)" opacity="0.9"/>
+            <text x="150" y="63" fill="#c8a96e" font-size="7" text-anchor="middle" font-weight="600">GELB (innen)</text>
+            <text x="150" y="244" fill="#c8a96e" font-size="7" text-anchor="middle" font-weight="600">GELB (innen)</text>
+            <text x="57" y="153" fill="#6e9ec8" font-size="7" text-anchor="middle" transform="rotate(-90,57,153)" font-weight="600">BLAU (innen)</text>
+            <text x="243" y="153" fill="#6e9ec8" font-size="7" text-anchor="middle" transform="rotate(90,243,153)" font-weight="600">BLAU (innen)</text>
+            <text x="150" y="25" fill="#6e9ec8" font-size="7" text-anchor="middle" font-weight="600">BLAU (außen)</text>
+            <text x="150" y="282" fill="#6e9ec8" font-size="7" text-anchor="middle" font-weight="600">BLAU (außen)</text>
+            <text x="19" y="153" fill="#c8a96e" font-size="7" text-anchor="middle" transform="rotate(-90,19,153)" font-weight="600">GELB (außen)</text>
+            <text x="281" y="153" fill="#c8a96e" font-size="7" text-anchor="middle" transform="rotate(90,281,153)" font-weight="600">GELB (außen)</text>
+          </svg>
+          <div class="t-legend">
+            <div class="t-legend-item"><div class="t-legend-box" style="background:#c8a96e;"></div>Gelbe Gasse</div>
+            <div class="t-legend-item"><div class="t-legend-box" style="background:#6e9ec8;"></div>Blaue Gasse</div>
+            <div class="t-legend-item"><div class="t-legend-circle" style="border-color:#e07070;"></div>Longierbahn</div>
+          </div>
+        </div>
+
+        <!-- Schritt für Schritt -->
+        <div class="t-sketch">
+          <div class="t-sketch-label">Aufbau – Schritt für Schritt</div>
+          <svg viewBox="0 0 370 140" width="100%" style="display:block;margin:0 auto;">
+            <rect width="370" height="140" fill="#1a1d27" rx="8"/>
+            <text x="42" y="11" fill="#7a8099" font-size="8" text-anchor="middle">① Kreuz legen</text>
+            <rect x="8"  y="63" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="50" y="63" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="38" y="25" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <rect x="38" y="83" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <polygon points="42,59 46,66 38,66" fill="#c8a96e" opacity="0.8"/>
+            <text x="96" y="72" fill="#c8a96e" font-size="14" text-anchor="middle">→</text>
+            <text x="165" y="11" fill="#7a8099" font-size="8" text-anchor="middle">② Außengassen</text>
+            <rect x="131" y="63" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="173" y="63" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="161" y="25" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <rect x="161" y="83" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <polygon points="165,59 169,66 161,66" fill="#c8a96e" opacity="0.8"/>
+            <rect x="151" y="15" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="151" y="111" width="26" height="8" rx="2" fill="#c8a96e" stroke="#a07840" stroke-width="1"/>
+            <rect x="119" y="53" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <rect x="203" y="53" width="8" height="26" rx="2" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="1"/>
+            <text x="228" y="72" fill="#c8a96e" font-size="14" text-anchor="middle">→</text>
+            <text x="308" y="11" fill="#c8a96e" font-size="8" text-anchor="middle">③ Fertige Volte</text>
+            <g transform="translate(248,9) scale(0.41)">
+              <rect x="100" y="68" width="100" height="13" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="2"/>
+              <rect x="100" y="219" width="100" height="13" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="2"/>
+              <rect x="68" y="100" width="13" height="100" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="2"/>
+              <rect x="219" y="100" width="13" height="100" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="2"/>
+              <rect x="100" y="30" width="100" height="13" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="2"/>
+              <rect x="100" y="257" width="100" height="13" rx="3" fill="#6e9ec8" stroke="#4a7aa0" stroke-width="2"/>
+              <rect x="30" y="100" width="13" height="100" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="2"/>
+              <rect x="257" y="100" width="13" height="100" rx="3" fill="#c8a96e" stroke="#a07840" stroke-width="2"/>
+              <circle cx="150" cy="150" r="98" fill="none" stroke="#e07070" stroke-width="4" opacity="0.85"/>
+              <circle cx="150" cy="150" r="7" fill="#e8e4dc" opacity="0.35"/>
+            </g>
+          </svg>
         </div>
       </div>
-    </div>
-    <div class="theory-content" id="ttab-cw">
+
+      <div class="t-hr"></div>
+
       <div class="t-section">
-        <div class="t-title">🎯 Classic Work</div>
-        <p class="t-p">Classic Work fokussiert auf präzise, kurze Trainingsimpulse mit langen Erholungsphasen. Ideal für ältere Pferde oder zur Rehabilitation.</p>
-        <div class="t-hint">Kürzere Arbeitsintervalle (30–60 Sek.) mit längeren Pausen (60–90 Sek.) schonen Gelenke und Sehnen.</div>
-      </div>
-    </div>
-    <div class="theory-content" id="ttab-stufen">
-      <div class="t-section">
-        <div class="t-title">📊 Trainingsstufen</div>
+        <div class="t-title"><span>📊</span> Trainingsstufen</div>
+        <p class="t-p">Alle Stufen auf der Quadratvolte mit Longe. Stufe 1 mit 45 Sek. Pause (angepasst).</p>
         <div class="t-table-wrap">
           <table class="t-table">
-            <thead><tr><th>Stufe</th><th>Arbeit</th><th>Pause</th><th>Runden</th><th>Ziel</th></tr></thead>
+            <thead><tr><th>Stufe</th><th>Einh.</th><th>Arbeit</th><th>Pause</th><th>Gesamt</th></tr></thead>
             <tbody>
-              <tr class="lv1"><td><span class="stufe-b">A</span></td><td>60 s</td><td>30 s</td><td>4</td><td>Einstieg / Aufwärmen</td></tr>
-              <tr class="lv2"><td><span class="stufe-b">B</span></td><td>90 s</td><td>30 s</td><td>6</td><td>Grundkondition</td></tr>
-              <tr class="lv3"><td><span class="stufe-b">C</span></td><td>120 s</td><td>30 s</td><td>8</td><td>Ausdauer / Fortgeschritten</td></tr>
+              <tr class="lv1"><td><span class="stufe-b">1</span></td><td>8 ×</td><td>60 s</td><td>45 s ★</td><td>~17 Min.</td></tr>
+              <tr class="lv1"><td><span class="stufe-b">2</span></td><td>10 ×</td><td>60 s</td><td>30 s</td><td>~15 Min.</td></tr>
+              <tr class="lv1"><td><span class="stufe-b">3</span></td><td>12 ×</td><td>60 s</td><td>30 s</td><td>~18 Min.</td></tr>
+              <tr class="lv2"><td><span class="stufe-b">4</span></td><td>12 ×</td><td>90 s</td><td>30 s</td><td>~24 Min.</td></tr>
+              <tr class="lv2"><td><span class="stufe-b">5</span></td><td>14 ×</td><td>60 s</td><td>30 s</td><td>~21 Min.</td></tr>
+              <tr class="lv2"><td><span class="stufe-b">6</span></td><td>14 ×</td><td>90 s</td><td>30 s</td><td>~28 Min.</td></tr>
+              <tr class="lv3"><td><span class="stufe-b">7</span></td><td>16 ×</td><td>60 s</td><td>30 s</td><td>~24 Min.</td></tr>
+              <tr class="lv3"><td><span class="stufe-b">8</span></td><td>16 ×</td><td>90 s</td><td>30 s</td><td>~32 Min.</td></tr>
             </tbody>
           </table>
         </div>
+        <div class="t-hint" style="margin-top:10px;">★ Stufe 1 mit 45 s Pause · Ab Stufe 3 kann auf 90 s gesteigert werden · 🟢 Einsteiger · 🟡 Aufbau · 🔴 Fortgeschritten</div>
       </div>
     </div>
+
+    <!-- ── DUALAKTIVIERUNG ── -->
+    <div class="theory-content" id="ttab-da">
+      <div class="t-section">
+        <div class="t-title"><span>📖</span> Dualaktivierung</div>
+        <p class="t-p">Inhalte folgen in Kürze. 🐴</p>
+      </div>
+    </div>
+
+    <!-- ── EQUICLASSIC WORK ── -->
+    <div class="theory-content" id="ttab-ecw">
+      <div class="t-section">
+        <div class="t-title"><span>📖</span> Equiclassic Work</div>
+        <p class="t-p">Inhalte folgen in Kürze. 🐴</p>
+      </div>
+    </div>
+
   </div>
 </div>
 
+</body>
+</html>
 <script>
 // ═══════════════════════════════════════════
 //  AUDIO ENGINE (Web Audio API – kein Internet)
@@ -960,13 +850,22 @@ let compressor = null;
 function getCtx() {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Kompressor verhindert Clipping und maximiert die Lautstärke
     compressor = audioCtx.createDynamicsCompressor();
+    compressor.threshold.value = -6;
+    compressor.knee.value = 3;
+    compressor.ratio.value = 4;
+    compressor.attack.value = 0.001;
+    compressor.release.value = 0.1;
     compressor.connect(audioCtx.destination);
   }
   return audioCtx;
 }
 
-function getOut() { return compressor || getCtx().destination; }
+function getOut() {
+  getCtx();
+  return compressor;
+}
 
 function playTone(freq, duration, type = 'sine', vol = 1.0, delay = 0) {
   const ctx = getCtx();
@@ -975,7 +874,7 @@ function playTone(freq, duration, type = 'sine', vol = 1.0, delay = 0) {
   osc.connect(gain);
   gain.connect(getOut());
   osc.type = type;
-  osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+  osc.frequency.value = freq;
   gain.gain.setValueAtTime(0, ctx.currentTime + delay);
   gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + delay + 0.01);
   gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
@@ -983,153 +882,238 @@ function playTone(freq, duration, type = 'sine', vol = 1.0, delay = 0) {
   osc.stop(ctx.currentTime + delay + duration + 0.05);
 }
 
+// Countdown-Piep – laut und klar
 function soundBeep() {
-  playTone(880, 0.12, 'square', 0.3);
+  playTone(1050, 0.12, 'square', 1.0, 0);
 }
 
+// Trillerpfiff – lang, schrill, mit echtem Triller-Vibrato
 function soundStart() {
-  playTone(523, 0.08, 'square', 0.5);
-  playTone(659, 0.08, 'square', 0.5, 0.10);
-  playTone(784, 0.15, 'square', 0.6, 0.20);
-  playTone(1047, 0.25, 'square', 0.7, 0.38);
+  const ctx = getCtx();
+
+  // Vibrato-LFO für den Triller-Effekt
+  const lfo = ctx.createOscillator();
+  const lfoGain = ctx.createGain();
+  lfo.frequency.value = 18;       // 18 Hz Triller-Frequenz
+  lfoGain.gain.value = 120;       // Frequenz-Hub des Trillerns
+  lfo.connect(lfoGain);
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  lfoGain.connect(osc.frequency); // LFO moduliert Tonhöhe
+  osc.connect(gain);
+  gain.connect(getOut());
+
+  osc.type = 'sine';
+  osc.frequency.value = 2200;     // hohe Grundfrequenz wie Trillerpfeife
+
+  const t = ctx.currentTime;
+  // Laut einsetzen, kurzes Anschwellen, dann lang klingeln
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(1.0, t + 0.03);
+  gain.gain.setValueAtTime(1.0, t + 0.7);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.85);
+
+  lfo.start(t);
+  osc.start(t);
+  lfo.stop(t + 0.9);
+  osc.stop(t + 0.9);
 }
 
+// Gong – tief, voluminös, lang ausklingend
 function soundBell(delay = 0) {
-  playTone(1047, 0.6, 'sine', 0.8, delay);
-  playTone(1319, 0.5, 'sine', 0.5, delay + 0.05);
-  playTone(1047, 0.8, 'sine', 0.4, delay + 0.3);
+  const ctx = getCtx();
+  const t = ctx.currentTime + delay;
+
+  // Gong-Charakter: tiefer Grundton + Obertöne, sehr langes Ausklingen
+  const partials = [
+    { freq: 110, vol: 1.0,  dur: 4.0 },   // tiefer Grundton – das "Wumm"
+    { freq: 220, vol: 0.6,  dur: 3.5 },   // erster Oberton
+    { freq: 330, vol: 0.35, dur: 3.0 },   // zweiter Oberton
+    { freq: 517, vol: 0.2,  dur: 2.5 },   // Gong-typischer inharmonischer Oberton
+    { freq: 740, vol: 0.1,  dur: 2.0 },   // Brillanz
+  ];
+
+  partials.forEach(({ freq, vol, dur }) => {
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(getOut());
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    // Gong: sofort laut, dann sehr langsam abklingen
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(vol, t + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    osc.start(t);
+    osc.stop(t + dur + 0.05);
+  });
+
+  // Kurzer Attack-Klick für den "Schlag"-Charakter
+  const click = ctx.createOscillator();
+  const clickGain = ctx.createGain();
+  click.connect(clickGain);
+  clickGain.connect(getOut());
+  click.type = 'square';
+  click.frequency.value = 80;
+  clickGain.gain.setValueAtTime(0.8, t);
+  clickGain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+  click.start(t);
+  click.stop(t + 0.07);
 }
 
+// Letzte Runde: Gong zweimal, etwas mehr Abstand
 function soundDone() {
   soundBell(0);
   soundBell(4.5);
 }
 
+// Pause-Ende (nicht mehr genutzt, aber als Fallback drin)
 function soundPause() {
-  playTone(523, 0.3, 'sine', 0.5);
-  playTone(440, 0.4, 'sine', 0.4, 0.35);
+  playTone(800, 0.12, 'square', 0.8, 0);
 }
 
 // ═══════════════════════════════════════════
-//  PROGRAMME
+//  DEFAULT PROGRAMMES (Equikinetik Stufen)
 // ═══════════════════════════════════════════
-
-const BUILTIN_PROGRAMS = [
-  { id: 'eq-a', name: 'Equikinetik Stufe A', rounds: 4, work: 60,  pause: 30, prepare: 10, types: ['Equikinetik'], notes: 'Einstieg & Aufwärmen', builtin: true },
-  { id: 'eq-b', name: 'Equikinetik Stufe B', rounds: 6, work: 90,  pause: 30, prepare: 10, types: ['Equikinetik'], notes: 'Grundkondition',       builtin: true },
-  { id: 'eq-c', name: 'Equikinetik Stufe C', rounds: 8, work: 120, pause: 30, prepare: 10, types: ['Equikinetik'], notes: 'Ausdauer / Fortgeschritten', builtin: true },
-  { id: 'cw-1', name: 'Classic Work Basis',  rounds: 5, work: 45,  pause: 60, prepare: 10, types: ['Classic Work'], notes: 'Schonend für Gelenke', builtin: true },
+const DEFAULT_PROGRAMS = [
+  // ── Equiclassic Work / Dualaktivierung ───
+  { id: 'ecw6',  name: 'Equiclassic Work / Dualaktivierung · 6 Runden',  work: 180, pause: 60, rounds: 6,  prepare: 30, builtin: true },
+  { id: 'ecw8',  name: 'Equiclassic Work / Dualaktivierung · 8 Runden',  work: 180, pause: 60, rounds: 8,  prepare: 30, builtin: true },
+  { id: 'ecw10', name: 'Equiclassic Work / Dualaktivierung · 10 Runden', work: 180, pause: 60, rounds: 10, prepare: 30, builtin: true },
+  // ── Equikinetik Stufen ────────────────────
+  // Stufe 1: 8 × 60s Arbeit, 45s Pause (deine Anpassung)
+  { id: 'eqs1',  name: 'Equikinetik Stufe 1',  work: 60, pause: 45, rounds: 8,  prepare: 30, builtin: true },
+  // Stufe 2: 10 × 60s / 30s
+  { id: 'eqs2',  name: 'Equikinetik Stufe 2',  work: 60, pause: 30, rounds: 10, prepare: 30, builtin: true },
+  // Stufe 3: 12 × 60s / 30s
+  { id: 'eqs3',  name: 'Equikinetik Stufe 3',  work: 60, pause: 30, rounds: 12, prepare: 30, builtin: true },
+  // Stufe 4: 12 × 90s / 30s
+  { id: 'eqs4',  name: 'Equikinetik Stufe 4',  work: 90, pause: 30, rounds: 12, prepare: 30, builtin: true },
+  // Stufe 5: 14 × 60s / 30s
+  { id: 'eqs5',  name: 'Equikinetik Stufe 5',  work: 60, pause: 30, rounds: 14, prepare: 30, builtin: true },
+  // Stufe 6: 14 × 90s / 30s
+  { id: 'eqs6',  name: 'Equikinetik Stufe 6',  work: 90, pause: 30, rounds: 14, prepare: 30, builtin: true },
+  // Stufe 7: 16 × 60s / 30s
+  { id: 'eqs7',  name: 'Equikinetik Stufe 7',  work: 60, pause: 30, rounds: 16, prepare: 30, builtin: true },
+  // Stufe 8: 16 × 90s / 30s
+  { id: 'eqs8',  name: 'Equikinetik Stufe 8',  work: 90, pause: 30, rounds: 16, prepare: 30, builtin: true },
 ];
 
+// ═══════════════════════════════════════════
+//  STATE & STORAGE
+// ═══════════════════════════════════════════
 function loadPrograms() {
   const saved = JSON.parse(localStorage.getItem('eqPrograms') || '[]');
-  return [...BUILTIN_PROGRAMS, ...saved];
+  return [...DEFAULT_PROGRAMS, ...saved];
 }
 
 function saveCustomPrograms(progs) {
   localStorage.setItem('eqPrograms', JSON.stringify(progs.filter(p => !p.builtin)));
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
+let programs = loadPrograms();
+let selectedId = null;
+let editingId = null;
+
+// ═══════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'new' && !editingId) resetForm();
+  });
+});
 
 function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
-  if (name === 'stats') renderStats();
 }
 
-let selectedProgId = null;
-
+// ═══════════════════════════════════════════
+//  PROGRAM LIST RENDER
+// ═══════════════════════════════════════════
 function renderPrograms() {
-  const progs = loadPrograms();
+  programs = loadPrograms();
   const list = document.getElementById('progList');
-  list.innerHTML = progs.map(p => {
-    const totalMin = Math.round((p.rounds * (p.work + p.pause)) / 60);
-    const types = (p.types || []).join(', ');
-    return `<div class="prog-card${selectedProgId === p.id ? ' selected' : ''}" data-id="${p.id}" onclick="selectProg('${p.id}')">
+  list.innerHTML = '';
+  programs.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'prog-card' + (p.id === selectedId ? ' selected' : '');
+    card.innerHTML = `
       <div>
-        <div class="prog-name">${p.name}</div>
-        <div class="prog-meta">${p.rounds} Runden · ${p.work}s Arbeit · ${p.pause}s Pause · ~${totalMin} Min${types ? ' · ' + types : ''}</div>
-        ${p.notes ? `<div class="prog-meta" style="margin-top:2px;font-style:italic">${p.notes}</div>` : ''}
+        <div class="prog-name">${p.name}${p.builtin ? ' <span style="font-size:.65rem;color:var(--muted);font-weight:400;">Voreinstellung</span>' : ''}</div>
+        <div class="prog-meta">⏱ ${p.work}s Arbeit · ⏸ ${p.pause}s Pause · 🔁 ${p.rounds}x</div>
       </div>
       <div class="prog-actions">
-        ${!p.builtin ? `<button onclick="event.stopPropagation();startEdit('${p.id}')" title="Bearbeiten">✏️</button>` : ''}
-        ${!p.builtin ? `<button onclick="event.stopPropagation();deleteProgram('${p.id}')" title="Löschen">🗑</button>` : ''}
+        ${!p.builtin ? `<button title="Bearbeiten" data-edit="${p.id}">✏️</button><button title="Löschen" data-del="${p.id}">🗑️</button>` : ''}
       </div>
-    </div>`;
-  }).join('');
+    `;
+    card.addEventListener('click', (e) => {
+      if (e.target.dataset.edit || e.target.dataset.del) return;
+      selectedId = p.id;
+      renderPrograms();
+    });
+    // edit / delete
+    card.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', () => startEdit(p.id)));
+    card.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => deleteProgram(p.id)));
+    list.appendChild(card);
+  });
 }
 
-function selectProg(id) {
-  selectedProgId = id;
-  renderPrograms();
-}
-
+// ═══════════════════════════════════════════
+//  FORM
+// ═══════════════════════════════════════════
 function resetForm() {
+  editingId = null;
+  document.getElementById('formTitle').textContent = 'Neues Programm';
   document.getElementById('editId').value = '';
   document.getElementById('fName').value = '';
+  document.getElementById('fWork').value = 30;
+  document.getElementById('fPause').value = 15;
   document.getElementById('fRounds').value = 6;
-  document.getElementById('fWork').value = 120;
-  document.getElementById('fPause').value = 30;
-  document.getElementById('fPrepare').value = 10;
-  document.getElementById('fNotes').value = '';
-  document.querySelectorAll('#tab-new input[type="checkbox"]').forEach(cb => cb.checked = false);
-  document.getElementById('formTitle').textContent = 'Neues Programm';
+  document.getElementById('fPrepare').value = 5;
 }
 
 function startEdit(id) {
-  const prog = loadPrograms().find(p => p.id === id);
-  if (!prog || prog.builtin) return;
-  document.getElementById('editId').value = prog.id;
-  document.getElementById('fName').value = prog.name;
-  document.getElementById('fRounds').value = prog.rounds;
-  document.getElementById('fWork').value = prog.work;
-  document.getElementById('fPause').value = prog.pause;
-  document.getElementById('fPrepare').value = prog.prepare || 10;
-  document.getElementById('fNotes').value = prog.notes || '';
-  document.querySelectorAll('#tab-new input[type="checkbox"]').forEach(cb => {
-    cb.checked = (prog.types || []).includes(cb.value);
-  });
+  const p = programs.find(x => x.id === id);
+  if (!p || p.builtin) return;
+  editingId = id;
   document.getElementById('formTitle').textContent = 'Programm bearbeiten';
+  document.getElementById('editId').value = id;
+  document.getElementById('fName').value = p.name;
+  document.getElementById('fWork').value = p.work;
+  document.getElementById('fPause').value = p.pause;
+  document.getElementById('fRounds').value = p.rounds;
+  document.getElementById('fPrepare').value = p.prepare ?? 5;
   switchTab('new');
 }
 
-function deleteProgram(id) {
-  if (!confirm('Programm löschen?')) return;
-  const progs = loadPrograms().filter(p => p.id !== id);
-  saveCustomPrograms(progs);
-  if (selectedProgId === id) selectedProgId = null;
-  renderPrograms();
-}
-
 document.getElementById('btnSaveProg').addEventListener('click', () => {
-  const name = document.getElementById('fName').value.trim();
-  if (!name) { alert('Bitte einen Namen eingeben.'); return; }
-  const rounds  = parseInt(document.getElementById('fRounds').value) || 6;
-  const work    = parseInt(document.getElementById('fWork').value) || 120;
-  const pause   = parseInt(document.getElementById('fPause').value) || 30;
-  const prepare = parseInt(document.getElementById('fPrepare').value) || 10;
-  const notes   = document.getElementById('fNotes').value.trim();
-  const types   = [...document.querySelectorAll('#tab-new input[type="checkbox"]:checked')].map(cb => cb.value);
-  const editId  = document.getElementById('editId').value;
+  const name    = document.getElementById('fName').value.trim();
+  const work    = parseInt(document.getElementById('fWork').value);
+  const pause   = parseInt(document.getElementById('fPause').value);
+  const rounds  = parseInt(document.getElementById('fRounds').value);
+  const prepare = parseInt(document.getElementById('fPrepare').value);
+  if (!name || !work || !pause || !rounds) { showToast('⚠️ Bitte alle Felder ausfüllen'); return; }
 
-  let progs = loadPrograms();
-  if (editId) {
-    progs = progs.map(p => p.id === editId ? { ...p, name, rounds, work, pause, prepare, notes, types } : p);
+  const custom = programs.filter(p => !p.builtin);
+  if (editingId) {
+    const idx = custom.findIndex(p => p.id === editingId);
+    if (idx >= 0) custom[idx] = { id: editingId, name, work, pause, rounds, prepare };
   } else {
-    progs.push({ id: 'custom-' + Date.now(), name, rounds, work, pause, prepare, notes, types, builtin: false });
+    custom.push({ id: 'c_' + Date.now(), name, work, pause, rounds, prepare });
   }
-  saveCustomPrograms(progs);
+  saveCustomPrograms(custom);
+  programs = loadPrograms();
   renderPrograms();
-  showToast('✓ Gespeichert');
   resetForm();
   switchTab('programs');
+  showToast('✓ Programm gespeichert');
 });
 
 document.getElementById('btnCancelEdit').addEventListener('click', () => {
@@ -1137,18 +1121,29 @@ document.getElementById('btnCancelEdit').addEventListener('click', () => {
   switchTab('programs');
 });
 
+function deleteProgram(id) {
+  if (!confirm('Programm löschen?')) return;
+  const custom = programs.filter(p => !p.builtin && p.id !== id);
+  saveCustomPrograms(custom);
+  if (selectedId === id) selectedId = null;
+  programs = loadPrograms();
+  renderPrograms();
+}
+
+// ═══════════════════════════════════════════
+//  LOAD PROGRAM → TIMER
+// ═══════════════════════════════════════════
 document.getElementById('btnLoadProg').addEventListener('click', () => {
-  if (!selectedProgId) { showToast('⚠ Bitte zuerst ein Programm auswählen'); return; }
-  const prog = loadPrograms().find(p => p.id === selectedProgId);
-  if (!prog) return;
-  loadTimer(prog);
+  if (!selectedId) { showToast('⚠️ Bitte erst ein Programm wählen'); return; }
+  const p = programs.find(x => x.id === selectedId);
+  if (!p) return;
+  loadTimer(p);
   switchTab('timer');
 });
 
 // ═══════════════════════════════════════════
-//  TIMER
+//  TIMER ENGINE
 // ═══════════════════════════════════════════
-
 let timerProg = null;
 let timerState = 'idle'; // idle | prepare | work | pause | done
 let timerRound = 1;
@@ -1156,7 +1151,6 @@ let timerSeconds = 0;
 let timerTotal = 0;
 let timerInterval = null;
 let timerRunning = false;
-let timerStartTime = null; // für Statistik
 
 function loadTimer(p) {
   stopTimer();
@@ -1164,60 +1158,82 @@ function loadTimer(p) {
   timerState = 'idle';
   timerRound = 1;
   timerRunning = false;
-  timerStartTime = null;
   document.getElementById('timerProgName').textContent = p.name;
   document.getElementById('phaseLabel').className = 'phase-label';
   document.getElementById('phaseLabel').textContent = 'Bereit';
   document.getElementById('roundInfo').textContent = `Runde 1 von ${p.rounds}`;
   document.getElementById('btnPlay').textContent = '▶';
-  setClockDisplay(p.prepare || 10, 'idle');
-  setProgress(0, 'idle');
+  const prep = p.prepare > 0 ? p.prepare : p.work;
+  setClockDisplay(prep, 'idle');
+  setProgress(0, 'work');
 }
 
 function setClockDisplay(secs, phase) {
   const m = String(Math.floor(secs / 60)).padStart(2, '0');
   const s = String(secs % 60).padStart(2, '0');
-  const el = document.getElementById('clock');
-  el.textContent = `${m}:${s}`;
-  el.className = 'clock' + (phase === 'work' ? ' work' : phase === 'pause' ? ' pause' : '');
+  document.getElementById('clock').textContent = `${m}:${s}`;
+  document.getElementById('clock').className = 'clock ' + (phase === 'work' ? 'work' : phase === 'pause' ? 'pause' : '');
 }
 
 function setPhaseLabel(text, cls) {
   const el = document.getElementById('phaseLabel');
   el.textContent = text;
-  el.className = 'phase-label' + (cls ? ' ' + cls : '');
+  el.className = 'phase-label ' + cls;
 }
 
 function setProgress(pct, phase) {
-  const fill = document.getElementById('progressFill');
-  fill.style.width = pct + '%';
-  fill.className = 'progress-bar-fill' + (phase === 'pause' ? ' pause' : '');
+  const el = document.getElementById('progressFill');
+  el.style.width = pct + '%';
+  el.className = 'progress-bar-fill ' + (phase === 'pause' ? 'pause' : '');
+}
+
+function startTimer() {
+  if (!timerProg) return;
+  timerRunning = true;
+  document.getElementById('btnPlay').textContent = '⏸';
+
+  if (timerState === 'idle') {
+    if (timerProg.prepare > 0) {
+      timerState = 'prepare';
+      timerSeconds = timerProg.prepare;
+      timerTotal = timerProg.prepare;
+      setPhaseLabel('Vorbereitung', '');
+    } else {
+      beginWork();
+      return;
+    }
+  }
+
+  timerInterval = setInterval(tick, 1000);
 }
 
 function beginWork() {
-  if (!timerStartTime) timerStartTime = Date.now();
   timerState = 'work';
   timerSeconds = timerProg.work;
   timerTotal = timerProg.work;
-  setPhaseLabel(`Arbeit – Runde ${timerRound} von ${timerProg.rounds}`, 'work');
+  setPhaseLabel(`Arbeit · Runde ${timerRound}`, 'work');
   document.getElementById('roundInfo').textContent = `Runde ${timerRound} von ${timerProg.rounds}`;
-  setClockDisplay(timerSeconds, 'work');
-  setProgress(0, 'work');
-  soundStart();
+  soundStart(); // Schrill-Pfiff → Los!
+  // Sprachansage nach dem Pfiff
+  const isLast = timerRound === timerProg.rounds;
+  const text = isLast
+    ? `Runde ${timerRound} – letzte Runde!`
+    : `Runde ${timerRound}`;
+  speak(text, 500);
 }
 
 function beginPause() {
   timerState = 'pause';
   timerSeconds = timerProg.pause;
   timerTotal = timerProg.pause;
-  setPhaseLabel('Pause 🌿', 'pause');
-  setClockDisplay(timerSeconds, 'pause');
-  setProgress(0, 'pause');
+  setPhaseLabel('Pause', 'pause');
+  // Glocke wird bereits in tick() vor beginPause() ausgelöst
 }
 
 function tick() {
   if (!timerRunning) return;
 
+  // Countdown-Pieps bei 3, 2, 1
   if (timerSeconds <= 3 && timerSeconds > 0 && (timerState === 'work' || timerState === 'pause' || timerState === 'prepare')) {
     soundBeep();
   }
@@ -1229,12 +1245,14 @@ function tick() {
   timerSeconds--;
 
   if (timerSeconds < 0) {
+    // Phase beendet
     if (timerState === 'prepare') {
       clearInterval(timerInterval);
       beginWork();
       timerInterval = setInterval(tick, 1000);
     } else if (timerState === 'work') {
       if (timerRound >= timerProg.rounds) {
+        // Letzte Runde fertig → Glocke 2x!
         clearInterval(timerInterval);
         timerState = 'done';
         timerRunning = false;
@@ -1244,82 +1262,50 @@ function tick() {
         document.getElementById('roundInfo').textContent = `Alle ${timerProg.rounds} Runden geschafft! 🐴`;
         document.getElementById('btnPlay').textContent = '▶';
         setProgress(100, 'work');
-        soundDone();
-        vibrate([300, 100, 300, 100, 600]);
-        const _dur = timerStartTime ? (Date.now() - timerStartTime) / 60000 : 0;
-        timerStartTime = null;
-        onSessionDone(timerProg, timerProg.rounds, _dur);
+        soundDone(); // Glocke 2x
       } else {
+        // Arbeitsphase → Pause: Glocke 1x
         clearInterval(timerInterval);
         soundBell(0);
-        vibrate([200, 100, 200]);
         beginPause();
         timerInterval = setInterval(tick, 1000);
       }
     } else if (timerState === 'pause') {
       timerRound++;
       clearInterval(timerInterval);
-      vibrate([100, 50, 100, 50, 300]);
-      beginWork();
+      beginWork(); // Pfiff beim Start der nächsten Runde
       timerInterval = setInterval(tick, 1000);
     }
   }
 }
 
-function stopTimer() {
-  clearInterval(timerInterval);
+function pauseTimer() {
   timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('btnPlay').textContent = '▶';
+}
+
+function stopTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
   timerInterval = null;
 }
 
-// Play / Pause Button
-document.getElementById('btnPlay').addEventListener('click', () => {
-  if (!timerProg) { showToast('⚠ Bitte zuerst ein Programm wählen'); switchTab('programs'); return; }
-  getCtx(); // AudioContext entsperren
-
-  if (timerState === 'done' || timerState === 'idle') {
-    // Neu starten
-    timerRound = 1;
-    timerRunning = true;
-    timerStartTime = null;
-    document.getElementById('btnPlay').textContent = '⏸';
-    if (timerProg.prepare > 0) {
-      timerState = 'prepare';
-      timerSeconds = timerProg.prepare;
-      timerTotal = timerProg.prepare;
-      setPhaseLabel('Vorbereitung…', '');
-      setClockDisplay(timerSeconds, 'prepare');
-      setProgress(0, 'prepare');
-    } else {
-      beginWork();
-    }
-    timerInterval = setInterval(tick, 1000);
-  } else if (timerRunning) {
-    // Pause
-    stopTimer();
-    document.getElementById('btnPlay').textContent = '▶';
-    setPhaseLabel('Pausiert', '');
-  } else {
-    // Fortsetzen
-    timerRunning = true;
-    document.getElementById('btnPlay').textContent = '⏸';
-    timerInterval = setInterval(tick, 1000);
-  }
-});
-
-// Reset Button
-document.getElementById('btnReset').addEventListener('click', () => {
-  if (!timerProg) return;
+function resetTimer() {
   stopTimer();
-  timerStartTime = null;
-  loadTimer(timerProg);
-});
+  if (timerProg) {
+    loadTimer(timerProg);
+  } else {
+    timerState = 'idle';
+    setClockDisplay(0, 'idle');
+    setPhaseLabel('–', '');
+  }
+}
 
-// Skip Button
-document.getElementById('btnSkip').addEventListener('click', () => {
+function skipPhase() {
   if (!timerProg || timerState === 'idle' || timerState === 'done') return;
   clearInterval(timerInterval);
-
+  timerSeconds = 0;
   if (timerState === 'prepare') {
     beginWork();
   } else if (timerState === 'work') {
@@ -1332,54 +1318,124 @@ document.getElementById('btnSkip').addEventListener('click', () => {
       document.getElementById('roundInfo').textContent = `Alle ${timerProg.rounds} Runden geschafft! 🐴`;
       document.getElementById('btnPlay').textContent = '▶';
       setProgress(100, 'work');
-      soundDone();
-      vibrate([300, 100, 300, 100, 600]);
-      const _dur2 = timerStartTime ? (Date.now() - timerStartTime) / 60000 : 0;
-      timerStartTime = null;
-      onSessionDone(timerProg, timerProg.rounds, _dur2);
+      soundDone(); // Glocke 2x
       return;
     }
     soundBell(0);
-    vibrate([200, 100, 200]);
     beginPause();
   } else if (timerState === 'pause') {
     timerRound++;
-    vibrate([100, 50, 100, 50, 300]);
     beginWork();
   }
-
   if (timerRunning) timerInterval = setInterval(tick, 1000);
+}
+
+document.getElementById('btnPlay').addEventListener('click', () => {
+  // Unlock audio on first user gesture
+  getCtx();
+  if (timerRunning) {
+    pauseTimer();
+    releaseWakeLock();
+  } else {
+    if (timerState === 'done' || timerState === 'idle') {
+      if (timerProg) loadTimer(timerProg);
+    }
+    startTimer();
+    requestWakeLock();
+  }
 });
 
-// Tab-Wechsel
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+document.getElementById('btnReset').addEventListener('click', resetTimer);
+document.getElementById('btnSkip').addEventListener('click', skipPhase);
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════
+//  SPRACHANSAGE (Web Speech API)
+// ═══════════════════════════════════════════
+function speak(text, delayMs = 400) {
+  if (!('speechSynthesis' in window)) return;
+  setTimeout(() => {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'de-DE';
+    utt.rate = 0.95;
+    utt.pitch = 1.0;
+    utt.volume = 1.0;
+    window.speechSynthesis.speak(utt);
+  }, delayMs);
+}
+
+// ═══════════════════════════════════════════
+//  WELCOME MODAL
+// ═══════════════════════════════════════════
+document.getElementById('btnWelcomeOk').addEventListener('click', () => {
+  document.getElementById('welcomeOverlay').classList.add('hidden');
+  // Audio Context vorbereiten nach User-Geste
+  getCtx();
+  // Speech kurz "aufwärmen" damit iOS nicht die erste Ansage schluckt
+  if ('speechSynthesis' in window) {
+    const warmup = new SpeechSynthesisUtterance('');
+    window.speechSynthesis.speak(warmup);
+  }
 });
 
 // ═══════════════════════════════════════════
-//  WAKE LOCK
+//  SCREEN WAKE LOCK
 // ═══════════════════════════════════════════
 let wakeLock = null;
+
 async function requestWakeLock() {
-  if ('wakeLock' in navigator) {
-    try {
-      wakeLock = await navigator.wakeLock.request('screen');
-      const el = document.getElementById('wakeLockIndicator');
-      el.textContent = '🔆 Bildschirm bleibt an';
-      el.classList.add('active');
-      wakeLock.addEventListener('release', () => {
-        document.getElementById('wakeLockIndicator').textContent = '';
-        document.getElementById('wakeLockIndicator').classList.remove('active');
-      });
-    } catch {}
+  if (!('wakeLock' in navigator)) {
+    document.getElementById('wakeLockIndicator').textContent = '';
+    return;
+  }
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    const el = document.getElementById('wakeLockIndicator');
+    el.textContent = '🟢 Bildschirm bleibt an';
+    el.classList.add('active');
+    wakeLock.addEventListener('release', () => {
+      el.textContent = '⚪ Wake Lock freigegeben';
+      el.classList.remove('active');
+    });
+  } catch (e) {
+    document.getElementById('wakeLockIndicator').textContent = '⚠️ Wake Lock nicht verfügbar';
   }
 }
-document.getElementById('btnPlay').addEventListener('click', requestWakeLock, { once: true });
+
+async function releaseWakeLock() {
+  if (wakeLock) {
+    await wakeLock.release();
+    wakeLock = null;
+  }
+  const el = document.getElementById('wakeLockIndicator');
+  el.textContent = '';
+  el.classList.remove('active');
+}
+
+// Wake Lock beim Seitenwechsel zurückholen
+document.addEventListener('visibilitychange', async () => {
+  if (wakeLock !== null && document.visibilityState === 'visible' && timerRunning) {
+    await requestWakeLock();
+  }
+});
 
 // ═══════════════════════════════════════════
-//  PWA INSTALL BANNER
+//  PWA INSTALL BANNER (iPhone)
 // ═══════════════════════════════════════════
 function showInstallBannerIfNeeded() {
+  // Nur zeigen wenn: iOS Safari + noch nicht installiert
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isStandalone = window.navigator.standalone === true;
   const dismissed = sessionStorage.getItem('installBannerDismissed');
@@ -1392,6 +1448,7 @@ document.getElementById('btnCloseBanner').addEventListener('click', () => {
   document.getElementById('installBanner').classList.remove('visible');
   sessionStorage.setItem('installBannerDismissed', '1');
 });
+
 
 // ═══════════════════════════════════════════
 //  THEORY MODAL
@@ -1417,146 +1474,9 @@ document.querySelectorAll('.theory-tab').forEach(btn => {
 });
 
 // ═══════════════════════════════════════════
-//  STATISTIK & NOTIZ
-// ═══════════════════════════════════════════
-
-const STATS_KEY = 'eqStats';
-const VIB_KEY   = 'eqVibration';
-
-function loadStats() {
-  return JSON.parse(localStorage.getItem(STATS_KEY) || '[]');
-}
-
-function saveStats(stats) {
-  localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-}
-
-function vibrate(pattern) {
-  const toggle = document.getElementById('vibToggle');
-  const on = toggle ? toggle.checked : false;
-  if (on && navigator.vibrate) navigator.vibrate(pattern);
-}
-
-let _pendingSession = null;
-
-function onSessionDone(prog, rounds, durationMin) {
-  _pendingSession = {
-    id: Date.now(),
-    date: new Date().toISOString(),
-    prog: prog.name,
-    rounds: rounds,
-    durationMin: Math.round(durationMin),
-    note: ''
-  };
-  const info = document.getElementById('notizProgInfo');
-  if (info) info.textContent = `${prog.name} · ${rounds} Runden · ~${Math.round(durationMin)} Min`;
-  const ta = document.getElementById('notizText');
-  if (ta) ta.value = '';
-  document.getElementById('notizOverlay')?.classList.remove('hidden');
-}
-
-function commitSession(note) {
-  if (!_pendingSession) return;
-  _pendingSession.note = note || '';
-  const stats = loadStats();
-  stats.unshift(_pendingSession);
-  saveStats(stats);
-  _pendingSession = null;
-  renderStats();
-}
-
-function renderStats() {
-  const stats = loadStats();
-
-  const totalMin = stats.reduce((s, e) => s + (e.durationMin || 0), 0);
-  const totalRounds = stats.reduce((s, e) => s + (e.rounds || 0), 0);
-  const sesEl = document.getElementById('statTotalSessions');
-  const minEl = document.getElementById('statTotalMinutes');
-  const rndEl = document.getElementById('statTotalRounds');
-  const strEl = document.getElementById('statStreak');
-  if (sesEl) sesEl.textContent = stats.length;
-  if (minEl) minEl.textContent = totalMin;
-  if (rndEl) rndEl.textContent = totalRounds;
-
-  // Streak berechnen
-  const days = [...new Set(stats.map(e => e.date.slice(0, 10)))].sort().reverse();
-  let streak = 0;
-  const today = new Date().toISOString().slice(0, 10);
-  let cur = today;
-  for (const d of days) {
-    if (d === cur) {
-      streak++;
-      const dt = new Date(cur);
-      dt.setDate(dt.getDate() - 1);
-      cur = dt.toISOString().slice(0, 10);
-    } else break;
-  }
-  if (strEl) strEl.textContent = streak;
-
-  const list = document.getElementById('statList');
-  if (!list) return;
-  if (stats.length === 0) {
-    list.innerHTML = '<div class="stat-empty">🐴 Noch keine Einheiten abgeschlossen.</div>';
-    return;
-  }
-  list.innerHTML = stats.map((e, i) => {
-    const d = new Date(e.date);
-    const dateStr = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit' });
-    const timeStr = d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-    return `<div class="stat-entry">
-      <div class="stat-date">${dateStr}<br>${timeStr}</div>
-      <div class="stat-info">
-        <div class="stat-prog">${e.prog}</div>
-        <div class="stat-meta">${e.rounds} Runden · ${e.durationMin} Min</div>
-        ${e.note ? `<div class="stat-note">💬 ${e.note}</div>` : ''}
-      </div>
-      <button class="stat-del" onclick="deleteStat(${i})" title="Löschen">✕</button>
-    </div>`;
-  }).join('');
-}
-
-function deleteStat(i) {
-  const stats = loadStats();
-  stats.splice(i, 1);
-  saveStats(stats);
-  renderStats();
-}
-
-// Vibrations-Einstellung laden
-(function initVibToggle() {
-  const toggle = document.getElementById('vibToggle');
-  if (!toggle) return;
-  toggle.checked = localStorage.getItem(VIB_KEY) !== 'off';
-  toggle.addEventListener('change', () => {
-    localStorage.setItem(VIB_KEY, toggle.checked ? 'on' : 'off');
-  });
-})();
-
-// Notiz-Modal Buttons
-document.getElementById('btnNotizSkip')?.addEventListener('click', () => {
-  commitSession('');
-  document.getElementById('notizOverlay')?.classList.add('hidden');
-});
-document.getElementById('btnNotizSave')?.addEventListener('click', () => {
-  const note = document.getElementById('notizText')?.value.trim() || '';
-  commitSession(note);
-  document.getElementById('notizOverlay')?.classList.add('hidden');
-  showToast('✓ Einheit gespeichert');
-});
-
-// Statistik löschen
-document.getElementById('btnClearStats')?.addEventListener('click', () => {
-  if (confirm('Gesamten Statistik-Verlauf löschen?')) {
-    localStorage.removeItem(STATS_KEY);
-    renderStats();
-  }
-});
-
-// ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
 renderPrograms();
-renderStats();
 showInstallBannerIfNeeded();
 </script>
 
