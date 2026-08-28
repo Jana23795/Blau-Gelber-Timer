@@ -613,6 +613,13 @@
     .cloud-read-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 14px 0 4px; }
     .cloud-status { color: var(--muted); font-size: .75rem; line-height: 1.4; }
     .horse-shared-status { color: var(--accent2); font-size: .75rem; line-height: 1.45; margin-top: 4px; }
+    .shared-horse-list { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .shared-horse-list h4 { color: var(--muted); font-size: .78rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 9px; }
+    .shared-horse-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px; margin-bottom: 8px; }
+    .shared-horse-info { min-width: 0; flex: 1; font-size: .85rem; line-height: 1.4; }
+    .shared-horse-info strong { color: var(--text); }
+    .shared-horse-meta { display: block; color: var(--muted); font-size: .75rem; margin-top: 2px; }
+    .shared-horse-item .btn { flex-shrink: 0; padding: 8px 10px; font-size: .78rem; }
     .horse-shared-status.is-empty { color: var(--muted); }
     @media (max-width: 420px) { .stats-header { flex-direction: column; } .horse-add-row { flex-direction: column; } }
 
@@ -765,9 +772,9 @@
       <h2 id="horseModalTitle">🐴 Pferde verwalten</h2>
       <button class="modal-close" id="btnCloseHorses" aria-label="Schließen">✕</button>
     </div>
-    <p class="modal-help">Lege deine Pferde an oder lade vorhandene Pferde aus dem gemeinsamen Trainingsblatt.</p>
+    <p class="modal-help">Hier siehst du nur die Pferde, die auf diesem Gerät ausgewählt wurden. Gemeinsame Pferde kannst du unten gezielt übernehmen.</p>
     <div class="cloud-read-row">
-      <button class="btn btn-secondary" id="btnRefreshSharedStatus">☁ Gemeinsamen Stand laden</button>
+      <button class="btn btn-secondary" id="btnRefreshSharedStatus">☁ Verfügbare Pferde laden</button>
       <span id="sharedStatusMessage" class="cloud-status" aria-live="polite"></span>
     </div>
     <div class="horse-add-row">
@@ -775,6 +782,7 @@
       <button class="btn btn-primary" id="btnAddHorse">＋ Hinzufügen</button>
     </div>
     <div id="horseList"></div>
+    <div id="sharedHorseList" class="shared-horse-list"></div>
   </div>
 </div>
 
@@ -1594,14 +1602,15 @@ showInstallBannerIfNeeded();
 // ═══════════════════════════════════════════
 //  LOCAL HORSES, SESSION NOTES & STATISTICS
 // ═══════════════════════════════════════════
-const HORSE_STORAGE_KEY = 'eqHorses';
-const SESSION_STORAGE_KEY = 'eqTrainingSessions';
+const HORSE_STORAGE_KEY = 'eqSelectedHorses';
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyHbzgwTCp1Qzsu6eMGBWj6IMCLQQQfEUijWFmSB9CqImBqW3vGSAe6oStQMeHtP-g/exec';
+// Einmalige Bereinigung aus der frueheren Version: Trainings kommen ab jetzt nur aus Google Sheets.
+try { localStorage.removeItem('eqTrainingSessions'); } catch (ignored) {}
 let horses = loadHorses();
-let sessions = loadSessions();
 let pendingCompletedSession = null;
 let sharedHorseData = {};
 let sharedReadInProgress = false;
+
 
 function readJson(key, fallback) {
   try {
@@ -1619,15 +1628,6 @@ function loadHorses() {
 
 function saveHorses() {
   localStorage.setItem(HORSE_STORAGE_KEY, JSON.stringify(horses));
-}
-
-function loadSessions() {
-  const saved = readJson(SESSION_STORAGE_KEY, []);
-  return Array.isArray(saved) ? saved.filter(item => item && item.horse && item.program) : [];
-}
-
-function saveSessions() {
-  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessions));
 }
 
 function vibrate(pattern) {
@@ -1659,10 +1659,45 @@ function renderHorseOptions(selectId, preferredName = '') {
   select.value = horses.includes(previous) ? previous : horses[0];
 }
 
+function renderSharedHorseList() {
+  const list = document.getElementById('sharedHorseList');
+  if (!list) return;
+  const candidates = Object.values(sharedHorseData)
+    .filter(item => item && item.horse && !horses.includes(item.horse))
+    .sort((a, b) => a.horse.localeCompare(b.horse, 'de'));
+  if (!candidates.length) {
+    list.innerHTML = sharedHorseData && Object.keys(sharedHorseData).length
+      ? '<h4>Gemeinsame Pferde</h4><div class="empty-state">Alle geladenen Pferde sind bereits ausgewählt.</div>'
+      : '';
+    return;
+  }
+  list.innerHTML = `<h4>Gemeinsame Pferde übernehmen</h4>${candidates.map(item => `
+    <div class="shared-horse-item">
+      <div class="shared-horse-info"><strong>🐴 ${escapeHtml(item.horse)}</strong><span class="shared-horse-meta">${item.lastProgram ? `Zuletzt: ${escapeHtml(item.lastProgram)}${item.lastTraining ? ` · ${formatSessionDate(item.lastTraining)}` : ''}` : 'Noch kein Training gespeichert'}</span></div>
+      <button type="button" class="btn btn-secondary" data-import-horse="${escapeHtml(item.horse)}">＋ Übernehmen</button>
+    </div>
+  `).join('')}`;
+  list.querySelectorAll('[data-import-horse]').forEach(button => {
+    button.addEventListener('click', () => importSharedHorse(button.dataset.importHorse));
+  });
+}
+
+function importSharedHorse(name) {
+  if (!name || horses.includes(name)) return;
+  horses.push(name);
+  saveHorses();
+  renderHorseOptions('sessionHorse', name);
+  renderHorseList();
+  renderSharedHorseList();
+  renderStats();
+  showToast(`✓ ${name} auf diesem Gerät übernommen`);
+}
+
 function renderHorseList() {
   const list = document.getElementById('horseList');
   if (!horses.length) {
-    list.innerHTML = '<div class="empty-state">Noch kein Pferd angelegt. Füge oben dein erstes Pferd hinzu.</div>';
+    list.innerHTML = '<div class="empty-state">Noch kein Pferd für dieses Gerät ausgewählt. Lade unten gemeinsame Pferde oder lege oben eines an.</div>';
+    renderSharedHorseList();
     return;
   }
   list.innerHTML = horses.map((name, index) => {
@@ -1686,6 +1721,7 @@ function renderHorseList() {
   list.querySelectorAll('[data-delete-horse]').forEach(button => {
     button.addEventListener('click', () => deleteHorse(Number(button.dataset.deleteHorse)));
   });
+  renderSharedHorseList();
 }
 
 
@@ -1723,21 +1759,16 @@ function loadSharedHorseStatus() {
       return;
     }
     sharedHorseData = {};
-    let imported = 0;
     data.horses.forEach(item => {
       if (!item || !item.horse) return;
       sharedHorseData[item.horse] = item;
-      if (!horses.includes(item.horse)) {
-        horses.push(item.horse);
-        imported += 1;
-      }
     });
-    if (imported) saveHorses();
     renderHorseOptions('sessionHorse');
     renderHorseList();
+    renderSharedHorseList();
     renderStats();
-    setSharedStatusMessage(`${data.horses.length} Pferde · aktualisiert`);
-    showToast(imported ? `✓ ${imported} Pferd(er) übernommen` : '✓ Gemeinsamer Stand aktualisiert');
+    setSharedStatusMessage(`${data.horses.length} gemeinsame Pferde gefunden`);
+    showToast('✓ Gemeinsame Pferde geladen – bitte gezielt übernehmen');
   };
   script.onerror = () => {
     clearTimeout(timeout);
@@ -1789,9 +1820,7 @@ function renameHorse(index) {
     return;
   }
   horses[index] = name;
-  sessions = sessions.map(session => session.horse === oldName ? { ...session, horse: name } : session);
   saveHorses();
-  saveSessions();
   renderHorseList();
   renderHorseOptions('sessionHorse', name);
   renderStats();
@@ -1839,11 +1868,8 @@ function saveCompletedSession() {
   }
   const note = document.getElementById('sessionNote').value.trim();
   const session = { ...pendingCompletedSession, horse, note, clientId: 'eq_' + Date.now() + '_' + Math.random().toString(36).slice(2) };
-  sessions.unshift(session);
-  saveSessions();
   closeSessionDialog();
-  renderStats();
-  showToast('✓ Lokal gespeichert – sende an Google Sheets …');
+  showToast('✓ Sende Training an Google Sheets …');
   sendSessionToGoogleSheets(session);
 }
 
@@ -1864,9 +1890,10 @@ function sendSessionToGoogleSheets(session) {
       clientId: session.clientId
     })
   }).then(() => {
-    showToast('✓ Training lokal und in Google Sheets gespeichert');
+    showToast('✓ Training in Google Sheets gespeichert');
+    loadSharedHorseStatus();
   }).catch(() => {
-    showToast('⚠️ Lokal gespeichert – Google Sheets nicht erreichbar');
+    showToast('⚠️ Training konnte nicht an Google Sheets gesendet werden');
   });
 }
 
@@ -1890,23 +1917,22 @@ function renderStats() {
   const list = document.getElementById('statsHorseList');
   const history = document.getElementById('statsHistory');
   if (!list || !history) return;
-  const byHorse = new Map(horses.map(name => [name, sessions.filter(session => session.horse === name)]));
   const knownHorses = [...horses];
-  sessions.forEach(session => { if (!knownHorses.includes(session.horse)) knownHorses.push(session.horse); });
   if (!knownHorses.length) {
-    list.innerHTML = '<div class="empty-state">Lege unter „🐴 Pferde" deine Pferde an. Nach jeder abgeschlossenen Einheit kannst du hier den Stand sehen.</div>';
+    list.innerHTML = '<div class="empty-state">Lege unter „🐴 Pferde" deine Geräte-Merkliste an. Der gemeinsame Trainingsstand wird dort geladen.</div>';
   } else {
     list.innerHTML = knownHorses.map(name => {
-      const horseSessions = byHorse.get(name) || sessions.filter(session => session.horse === name);
-      const last = horseSessions[0];
+      const shared = sharedHorseData[name];
       return `<div class="stats-card">
-        <div class="stats-card-head"><div class="stats-card-name">🐴 ${escapeHtml(name)}</div><div class="stats-card-meta">${horseSessions.length} ${horseSessions.length === 1 ? 'Training' : 'Trainings'}</div></div>
-        ${last ? `<div class="stats-last"><strong>Zuletzt:</strong> ${escapeHtml(last.program)}<br><span class="stats-card-meta">${formatSessionDate(last.completedAt)} · ${last.rounds} Runden</span></div>` : '<div class="stats-card-empty">Noch kein Training gespeichert.</div>'}
+        <div class="stats-card-head"><div class="stats-card-name">🐴 ${escapeHtml(name)}</div><div class="stats-card-meta">${shared ? `${shared.count || 0} ${(shared.count || 0) === 1 ? 'Training' : 'Trainings'}` : 'Noch nicht abgerufen'}</div></div>
+        ${shared && shared.lastProgram ? `<div class="stats-last"><strong>Zuletzt:</strong> ${escapeHtml(shared.lastProgram)}<br><span class="stats-card-meta">${shared.lastTraining ? `${formatSessionDate(shared.lastTraining)} · ` : ''}${shared.count || 0} ${(shared.count || 0) === 1 ? 'Training' : 'Trainings'}</span></div>` : '<div class="stats-card-empty">Noch kein gemeinsamer Trainingsstand geladen.</div>'}
       </div>`;
     }).join('');
   }
-  const recent = sessions.slice(0, 20);
-  history.innerHTML = recent.length ? `<h4>Letzte Einheiten</h4>${recent.map(session => `<div class="history-item"><strong>🐴 ${escapeHtml(session.horse)}</strong> · ${escapeHtml(session.program)}<small>${formatSessionDate(session.completedAt)} · ${session.rounds} Runden${session.note ? ` · ${escapeHtml(session.note)}` : ''}</small></div>`).join('')}` : '';
+  const recent = Object.values(sharedHorseData)
+    .filter(item => item && item.lastProgram && horses.includes(item.horse))
+    .sort((a, b) => String(b.lastTraining || '').localeCompare(String(a.lastTraining || '')));
+  history.innerHTML = recent.length ? `<h4>Letzter Stand</h4>${recent.map(item => `<div class="history-item"><strong>🐴 ${escapeHtml(item.horse)}</strong> · ${escapeHtml(item.lastProgram)}<small>${item.lastTraining ? formatSessionDate(item.lastTraining) : ''}${item.lastNote ? ` · ${escapeHtml(item.lastNote)}` : ''}</small></div>`).join('')}` : '';
 }
 
 document.getElementById('btnManageHorses').addEventListener('click', openHorseManager);
