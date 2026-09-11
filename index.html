@@ -585,6 +585,11 @@
     .stats-card-empty { color: var(--muted); font-size: .82rem; margin-top: 8px; }
     .stats-last { color: var(--text); font-size: .84rem; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
     .stats-last strong { color: var(--accent2); }
+    .stats-history-details { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; }
+    .stats-history-details summary { color: var(--accent); font-size: .8rem; font-weight: 600; cursor: pointer; list-style-position: inside; }
+    .stats-history-details summary:hover { color: var(--text); }
+    .stats-history-list { margin-top: 10px; }
+    .stats-history-list .history-item { margin-bottom: 7px; }
     .stats-history { margin-top: 18px; }
     .stats-history h4 { color: var(--muted); font-size: .78rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
     .history-item { background: var(--surface); border-left: 3px solid var(--accent2); border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; font-size: .82rem; line-height: 1.5; }
@@ -1953,7 +1958,6 @@ function saveCompletedSession() {
   const session = { ...pendingCompletedSession, horse, note, clientId: 'eq_' + Date.now() + '_' + Math.random().toString(36).slice(2) };
   closeSessionDialog(false);
   showToast('✓ Sende Training an Google Sheets …');
-  document.getElementById('btnNachtragenWrap').style.display = 'none';
   sendSessionToGoogleSheets(session);
 }
 
@@ -2007,9 +2011,14 @@ function renderStats() {
   } else {
     list.innerHTML = knownHorses.map(name => {
       const shared = sharedHorseData[name];
+      const sessions = shared && Array.isArray(shared.history) ? shared.history : [];
+      const historyMarkup = sessions.length
+        ? `<details class="stats-history-details"><summary>Trainingshistorie anzeigen (${sessions.length})</summary><div class="stats-history-list">${sessions.map(session => `<div class="history-item"><strong>${escapeHtml(session.program || 'Training')}</strong><small>${session.training ? formatSessionDate(session.training) : ''}${session.rounds ? ` · ${session.rounds} Runden` : ''}${session.note ? ` · ${escapeHtml(session.note)}` : ''}</small></div>`).join('')}</div></details>`
+        : '';
       return `<div class="stats-card">
         <div class="stats-card-head"><div class="stats-card-name">🐴 ${escapeHtml(name)}</div><div class="stats-card-meta">${shared ? `${shared.count || 0} ${(shared.count || 0) === 1 ? 'Training' : 'Trainings'}` : 'Noch nicht abgerufen'}</div></div>
         ${shared && shared.lastProgram ? `<div class="stats-last"><strong>Zuletzt:</strong> ${escapeHtml(shared.lastProgram)}<br><span class="stats-card-meta">${shared.lastTraining ? `${formatSessionDate(shared.lastTraining)} · ` : ''}${shared.count || 0} ${(shared.count || 0) === 1 ? 'Training' : 'Trainings'}</span></div>` : '<div class="stats-card-empty">Noch kein gemeinsamer Trainingsstand geladen.</div>'}
+        ${historyMarkup}
       </div>`;
     }).join('');
   }
