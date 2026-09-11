@@ -745,7 +745,13 @@
       <h3>Trainingsstand je Pferd</h3>
       <p>Abgeschlossene Einheiten werden nur auf diesem Gerät gespeichert.</p>
     </div>
-    <button class="btn btn-secondary" id="btnManageHorses">🐴 Pferde</button>
+    <div class="btn-row" style="margin-top:0;">
+      <button class="btn btn-secondary" id="btnRefreshStats">↻ Stand abfragen</button>
+      <button class="btn btn-secondary" id="btnManageHorses">🐴 Pferde</button>
+    </div>
+  </div>
+  <div id="btnNachtragenWrap" style="margin-bottom:12px;">
+    <button class="btn btn-secondary" id="btnNachtragen" style="width:100%;">📝 Training nachtragen</button>
   </div>
   <div id="statsHorseList"></div>
   <div class="stats-history" id="statsHistory"></div>
@@ -757,6 +763,10 @@
     <div class="session-done-icon">🎉</div>
     <h2 id="sessionDoneTitle">Training geschafft!</h2>
     <p class="modal-subtitle" id="sessionDoneProgram"></p>
+    <div class="form-row full">
+      <label for="sessionProgram">Training</label>
+      <select id="sessionProgram"></select>
+    </div>
     <div class="form-row full">
       <label for="sessionHorse">Pferd</label>
       <select id="sessionHorse"></select>
@@ -1008,9 +1018,12 @@ function playTone(freq, duration, type = 'sine', vol = 1.0, delay = 0) {
   osc.stop(ctx.currentTime + delay + duration + 0.05);
 }
 
-// Countdown-Piep – laut und klar
-function soundBeep() {
+// Countdown-Piep – laut und klar + Sprachzahl als iOS-Lautlos-Fallback
+function soundBeep(countdownNum) {
   playTone(1050, 0.12, 'square', 1.0, 0);
+  vibrate(40); // kurzer Tick-Impuls
+  // Auf iOS im Lautlos-Modus: Zahl ansagen (Speech läuft immer durch)
+  if (countdownNum !== undefined) speakSignal(String(countdownNum));
 }
 
 // Trillerpfiff – lang, schrill, mit echtem Triller-Vibrato
@@ -1088,10 +1101,12 @@ function soundBell(delay = 0) {
   click.stop(t + 0.07);
 }
 
-// Letzte Runde: Gong zweimal, etwas mehr Abstand
+// Letzte Runde: Gong zweimal, etwas mehr Abstand + Sprachsignal + Vibration
 function soundDone() {
   soundBell(0);
   soundBell(4.5);
+  speakSignal('Fertig', 200);
+  vibrate([200, 100, 200, 100, 500]); // langes Muster: Training beendet
 }
 
 // Pause-Ende (nicht mehr genutzt, aber als Fallback drin)
@@ -1339,6 +1354,7 @@ function beginWork() {
   timerTotal = timerProg.work;
   setPhaseLabel(`Arbeit · Runde ${timerRound}`, 'work');
   document.getElementById('roundInfo').textContent = `Runde ${timerRound} von ${timerProg.rounds}`;
+  vibrate(120); // Kurzer Impuls: neue Runde startet
   soundStart(); // Schrill-Pfiff → Los!
   // Sprachansage nach dem Pfiff
   const isLast = timerRound === timerProg.rounds;
@@ -1353,6 +1369,8 @@ function beginPause() {
   timerSeconds = timerProg.pause;
   timerTotal = timerProg.pause;
   setPhaseLabel('Pause', 'pause');
+  speakSignal('Pause', 100); // iOS-Lautlos-Fallback
+  vibrate([80, 80, 80]);     // Pause-Vibration: 3 kurze Impulse
   // Glocke wird bereits in tick() vor beginPause() ausgelöst
 }
 
@@ -1361,7 +1379,7 @@ function tick() {
 
   // Countdown-Pieps bei 3, 2, 1
   if (timerSeconds <= 3 && timerSeconds > 0 && (timerState === 'work' || timerState === 'pause' || timerState === 'prepare')) {
-    soundBeep();
+    soundBeep(timerSeconds); // Zahl mitgeben für iOS-Lautlos-Fallback
   }
 
   const pct = ((timerTotal - timerSeconds) / timerTotal) * 100;
@@ -1457,8 +1475,15 @@ function skipPhase() {
 }
 
 document.getElementById('btnPlay').addEventListener('click', () => {
-  // Unlock audio on first user gesture
-  getCtx();
+  // Unlock audio on first user gesture – stiller Buffer für iOS-Lautlos-Fix
+  const _ctx = getCtx();
+  try {
+    const _buf = _ctx.createBuffer(1, 1, 22050);
+    const _src = _ctx.createBufferSource();
+    _src.buffer = _buf;
+    _src.connect(_ctx.destination);
+    _src.start(0);
+  } catch(e) {}
   if (timerRunning) {
     pauseTimer();
     releaseWakeLock();
@@ -1502,13 +1527,36 @@ function speak(text, delayMs = 400) {
   }, delayMs);
 }
 
+// Kurzes Sprachsignal als iOS-Lautlos-Fallback (kein cancel, damit Rundenansage nicht unterbrochen wird)
+function speakSignal(text, delayMs = 0) {
+  if (!('speechSynthesis' in window)) return;
+  setTimeout(() => {
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'de-DE';
+    utt.rate = 1.2;
+    utt.pitch = 1.0;
+    utt.volume = 1.0;
+    window.speechSynthesis.speak(utt);
+  }, delayMs);
+}
+
 // ═══════════════════════════════════════════
 //  WELCOME MODAL
 // ═══════════════════════════════════════════
 document.getElementById('btnWelcomeOk').addEventListener('click', () => {
   document.getElementById('welcomeOverlay').classList.add('hidden');
-  // Audio Context vorbereiten nach User-Geste
-  getCtx();
+
+  // ── Audio Context entsperren (iOS-Lautlos-Fix) ──────────────────────────
+  // iOS sperrt die Web Audio API im Lautlos-Modus, AUSSER wenn beim ersten
+  // User-Tap ein echter (wenn auch stiller) Buffer abgespielt wird.
+  // Nur getCtx() aufzurufen reicht NICHT – wir müssen wirklich etwas abspielen.
+  const ctx = getCtx();
+  const silentBuffer = ctx.createBuffer(1, 1, 22050);
+  const silentSource = ctx.createBufferSource();
+  silentSource.buffer = silentBuffer;
+  silentSource.connect(ctx.destination);
+  silentSource.start(0);
+
   // Speech kurz "aufwärmen" damit iOS nicht die erste Ansage schluckt
   if ('speechSynthesis' in window) {
     const warmup = new SpeechSynthesisUtterance('');
@@ -1846,14 +1894,41 @@ function deleteHorse(index) {
   showToast('✓ Pferd gelöscht');
 }
 
-function openSessionDialog() {
+function renderSessionProgramOptions(preferredId = '') {
+  const select = document.getElementById('sessionProgram');
+  if (!select) return;
+  select.innerHTML = '';
+  programs.forEach(program => {
+    const option = document.createElement('option');
+    option.value = program.id;
+    option.textContent = program.name;
+    select.appendChild(option);
+  });
+  if (preferredId && programs.some(program => program.id === preferredId)) {
+    select.value = preferredId;
+  }
+}
+
+function updatePendingSessionFromForm() {
+  const selectedProgram = programs.find(program => program.id === document.getElementById('sessionProgram').value);
+  if (!selectedProgram || !pendingCompletedSession) return;
+  pendingCompletedSession.program = selectedProgram.name;
+  pendingCompletedSession.programId = selectedProgram.id;
+  pendingCompletedSession.rounds = selectedProgram.rounds;
+  document.getElementById('sessionDoneProgram').textContent = selectedProgram.name;
+}
+
+function openSessionDialog(manualProgram) {
+  // Ohne Vorgabe: manuelles Nachtragen mit Programmauswahl
+  const prog = manualProgram || timerProg || programs[0];
   pendingCompletedSession = {
-    program: timerProg ? timerProg.name : 'Training',
-    programId: timerProg ? timerProg.id : '',
-    rounds: timerProg ? timerProg.rounds : timerRound,
+    program: prog ? prog.name : 'Training',
+    programId: prog ? prog.id : '',
+    rounds: prog ? prog.rounds : 0,
     completedAt: new Date().toISOString()
   };
   document.getElementById('sessionDoneProgram').textContent = pendingCompletedSession.program;
+  renderSessionProgramOptions(pendingCompletedSession.programId);
   renderHorseOptions('sessionHorse');
   document.getElementById('sessionNote').value = '';
   document.getElementById('sessionDoneOverlay').classList.remove('hidden');
@@ -1873,10 +1948,12 @@ function saveCompletedSession() {
     openHorseManager();
     return;
   }
+  updatePendingSessionFromForm();
   const note = document.getElementById('sessionNote').value.trim();
   const session = { ...pendingCompletedSession, horse, note, clientId: 'eq_' + Date.now() + '_' + Math.random().toString(36).slice(2) };
-  closeSessionDialog();
+  closeSessionDialog(false);
   showToast('✓ Sende Training an Google Sheets …');
+  document.getElementById('btnNachtragenWrap').style.display = 'none';
   sendSessionToGoogleSheets(session);
 }
 
@@ -1954,35 +2031,16 @@ document.getElementById('horseOverlay').addEventListener('click', event => {
 });
 document.getElementById('btnSaveSession').addEventListener('click', saveCompletedSession);
 document.getElementById('btnSkipSession').addEventListener('click', closeSessionDialog);
-document.getElementById('sessionDoneOverlay').addEventListener('click', event => {
-  if (event.target.id === 'sessionDoneOverlay') closeSessionDialog();
-});
+document.getElementById('sessionProgram').addEventListener('change', updatePendingSessionFromForm);
+// Kein Schließen beim Klick außerhalb – Dialog bleibt offen bis bewusst entschieden wird
+document.getElementById('btnNachtragen').addEventListener('click', () => openSessionDialog());
+document.getElementById('btnRefreshStats').addEventListener('click', loadSharedHorseStatus);
+
 document.querySelector('[data-tab="stats"]').addEventListener('click', renderStats);
 
-const originalBeginWork = beginWork;
-beginWork = function() {
-  vibrate(120);
-  return originalBeginWork();
-};
-
-const originalBeginPause = beginPause;
-beginPause = function() {
-  vibrate([80, 80, 80]);
-  return originalBeginPause();
-};
-
-const originalSoundDone = soundDone;
-soundDone = function() {
-  vibrate([180, 100, 180, 100, 400]);
-  return originalSoundDone();
-};
-
-// Intercept completion without replacing the original timer state handling.
+// Intercept completion für Session-Dialog (Vibration ist jetzt direkt in den Funktionen)
 const originalTick = tick;
 tick = function() {
-  if (timerRunning && timerSeconds <= 3 && timerSeconds > 0 && ['work', 'pause', 'prepare'].includes(timerState)) {
-    vibrate(50);
-  }
   const wasDone = timerState === 'done';
   const result = originalTick();
   if (!wasDone && timerState === 'done') {
